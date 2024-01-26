@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,11 +18,16 @@ public class Enemy_AI : MonoBehaviour
     public Vector2 StartPos;
     RaycastHit2D hit;
     public LayerMask DetectMask;
+    public LayerMask EnemyMask;
     RaycastHit2D PlayerDetect;
     public int JumpForce;
     Rigidbody2D rb;
     bool IsJumped = false;
     public EnemyStates ES;
+    Vector2 TargetPos;
+    public GameObject PlayerPos;
+
+    public Collider2D[] Overlaps;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,7 +44,19 @@ public class Enemy_AI : MonoBehaviour
         //Debug.DrawRay(transform.position, transform.right * Dis);
 
         Debug.DrawRay(transform.position, transform.right * Dis, Color.red);
-
+        Overlaps = Physics2D.OverlapCircleAll(transform.position, 5, EnemyMask);
+        for (int i = 0; i > Overlaps.Length; i++)
+        {
+            if (Overlaps[i].gameObject.GetComponent<EnemyStates>() == EnemyStates.Found)
+            {
+                    //PlayerPos = Overlaps[i].transform.gameObject;
+                    ES = EnemyStates.Found;
+            }
+            else
+            {
+                break;
+            }
+        }
         switch (ES)
         {
             case EnemyStates.Patrol:
@@ -57,21 +75,21 @@ public class Enemy_AI : MonoBehaviour
                 Movement();
                 break;
         }
+
     }
 
     void Movement()
     {
         PlayerDetect = Physics2D.Raycast(transform.position, transform.right, Dis, DetectMask);
         //rb.velocity = new Vector2(MoveDir* Movespeed,rb.velocity.y);
-        //transform.position = new Vector3(Mathf.Clamp(transform.position.x, StartPos.x-3, StartPos.x + 3), StartPos.y);
         transform.position += new Vector3(MoveDir * Movespeed * Time.deltaTime, 0);
 
-        if (transform.position.x >=StartPos.x + 3 || transform.position.x <=StartPos.x - 3)
+        if (transform.position.x >= StartPos.x + 3 || transform.position.x <= StartPos.x - 3)
         {
             Flip();
         }
-        
-        
+
+
         if (PlayerDetect)
         {
             ES = EnemyStates.Found;
@@ -80,54 +98,57 @@ public class Enemy_AI : MonoBehaviour
         {
             ES = EnemyStates.Patrol;
         }
+        
     }
     void Stopped()
     {
-        if(!PlayerDetect)
+        if (hit.collider.CompareTag("Player"))
         {
-            ES = EnemyStates.Patrol;
+            ES = EnemyStates.Found;
         }
         else
         {
-            Debug.Log("You can't escape!!");
-            StartCoroutine(Wait());    
+            StartPos = transform.position;
+            StartCoroutine(Wait());
         }
     }
     void Follow()
     {
         //rb.velocity = new Vector2(MoveDir * Movespeed * 2, rb.velocity.y);
-        Vector2 TargetPos = new Vector2(PlayerDetect.transform.position.x-0.8f, PlayerDetect.transform.position.y);
-        transform.position = Vector2.MoveTowards(transform.position, TargetPos, Movespeed*1.5f * Time.deltaTime);
-        //transform.position += new Vector3(Movespeed*1.5f * Time.deltaTime, 0);
-        Debug.Log("Found You");
-        if (!PlayerDetect)
+        PlayerPos = PlayerDetect.collider.gameObject;
+        if (PlayerPos != null)
         {
-            ES = EnemyStates.Patrol;
-        }
-        else
-        {
-            if(Vector2.Distance(transform.position,PlayerDetect.collider.transform.position)<= 0.8f)
+            TargetPos = new Vector2(PlayerPos.transform.position.x + 2f, PlayerPos.transform.position.y);
+            transform.position = Vector2.MoveTowards(transform.position, TargetPos, Movespeed *1.5f* Time.deltaTime);
+            Debug.Log("Found You");
+            if (!PlayerDetect)
+            {
+                ES = EnemyStates.Patrol;
+            }
+
+            if (Physics2D.Raycast(transform.position,-transform.right,2f,DetectMask))
+            {
+                Debug.DrawRay(transform.position, -transform.right*2f,Color.blue);
+                Flip();
+            }
+            if (transform.position.x >= TargetPos.x)
             {
                 ES = EnemyStates.Stop;
             }
-        }
-        
-        if (hit.collider.CompareTag("Wall"))
-        {
-            if (hit.distance < 1.3f)
+            if (hit.collider.CompareTag("Wall"))
             {
-                ES = EnemyStates.Jump;
+                if (hit.distance < 1.3f)
+                {
+                    ES = EnemyStates.Jump;
+                }
+                else
+                {
+                    ES = EnemyStates.Found;
+                }
             }
-            else
-            {
-                ES = EnemyStates.Found;
-            }
+
         }
-        else
-        {
-            ES = EnemyStates.Found;
-        }
-        
+
     }
     void Jumping()
     {
@@ -139,9 +160,19 @@ public class Enemy_AI : MonoBehaviour
         else{
             rb.velocity = new Vector2(MoveDir* Movespeed,rb.velocity.y);
         }
-            //Debug.Log("Jumping");
-        if (!hit.collider.CompareTag("Wall"))
+    }
+    void Flip()
+    {
+        MoveDir *= -1;
+        transform.Rotate(0, 180, 0);
+    }
+
+    
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Ground"))
         {
+            IsJumped = false;
             if (PlayerDetect)
             {
                 ES = EnemyStates.Found;
@@ -151,28 +182,16 @@ public class Enemy_AI : MonoBehaviour
                 ES = EnemyStates.Patrol;
             }
         }
-    }
-    void Flip()
-    {
-        MoveDir *= -1;
-        transform.Rotate(0, 180, 0);
+        if (collision.collider.CompareTag("Wall"))
+        {
+            Flip();
+        }
     }
 
     IEnumerator Wait()
     {
         yield return new WaitForSeconds(1f);
-        Flip();
-    }
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Ground"))
-        {
-            IsJumped = false;
-            if (!IsJumped)
-            {
-                StartPos = transform.position;
 
-            }
-        }
+        ES = EnemyStates.Patrol;
     }
 }

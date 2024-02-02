@@ -15,9 +15,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Attack",
+                    "name": "Attack 1",
                     "type": "Button",
                     "id": "9398c42e-cb1a-4c26-af7d-6b1052fb3921",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Attack 2",
+                    "type": "Button",
+                    "id": "3f6ed47e-ee0b-4a85-8897-e181ac8ebec8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -134,7 +143,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard,Mouse",
-                    "action": "Attack",
+                    "action": "Attack 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -145,7 +154,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Controller",
-                    "action": "Attack",
+                    "action": "Attack 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -234,6 +243,28 @@
                     "processors": "",
                     "groups": "Controller",
                     "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3a5269c4-fe3a-4f27-8632-30bb291c6498",
+                    "path": "<Mouse>/forwardButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard,Mouse",
+                    "action": "Attack 2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0ae83bd9-4e72-4963-b936-31cefbc47508",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Attack 2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

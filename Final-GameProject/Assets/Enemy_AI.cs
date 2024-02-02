@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+
 
 public enum EnemyStates
 {
@@ -90,7 +92,7 @@ public class Enemy_AI : MonoBehaviour
     }
     void Stopped()
     {
-        if(!PlayerDetect)
+        if (!PlayerDetect)
         {
             ES = EnemyStates.Patrol;
         }
@@ -137,13 +139,14 @@ public class Enemy_AI : MonoBehaviour
 
         if (hit.collider.CompareTag("Wall"))
         {
-            if (hit.distance < 1.7f)
+            if (hit.distance <= 1.7f)
             {
                 ES = EnemyStates.Jump;
             }
         }
         
     }
+
     void Jumping()
     {
         if (!IsJumped)
@@ -188,17 +191,12 @@ public class Enemy_AI : MonoBehaviour
             if (!IsJumped)
             {
                 StartPos = transform.position;
-
-                if (!PlayerDetect)
-                {
-                    ES = EnemyStates.Patrol;
-                }
-                else
-                {
-                    ES = EnemyStates.Found;
-                }
             }
 
+        }
+        if (collision.collider.CompareTag("Wall"))
+        {
+            Flip();
         }
     }
 }

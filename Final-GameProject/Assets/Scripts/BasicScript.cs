@@ -14,12 +14,19 @@ public class BasicScript : MonoBehaviour
     bool isFacingright;
     bool canjump;
 
+    Vector2 newpos;
+    int Btn_Pressed_Counter;
+    int Sec_Combo_BtnPressed;
 
     public bool canDash;
     public bool isDashing;
     private float DashingTime = 0.3f;
     private float DashCD = 5f;
-    
+
+    /*private void Awake()
+    {
+        OnLoad();
+    }*/
     // Start is called before the first frame update
     void Start()
     {
@@ -46,14 +53,69 @@ public class BasicScript : MonoBehaviour
             Flip();
         }
     }
-
-    public void OnAttack(InputAction.CallbackContext context)
+    public void OnBtnPressed(InputAction.CallbackContext context)
     {
-        if (!isholding && context.performed)
+        if (context.performed)
         {
-            anim.SetTrigger("Attack");
-            Attack();
+            Btn_Pressed_Counter++;
+
+            if (Sec_Combo_BtnPressed == 0 && Btn_Pressed_Counter == 1)
+            {
+                OnAttack();
+                Invoke("ResetStart", 1f);
+            }
+            if (Sec_Combo_BtnPressed == 0 && Btn_Pressed_Counter == 2)
+            {
+                OnAttack2();
+                Invoke("ResetStart", 1f);
+            }
+            if (Sec_Combo_BtnPressed == 0 && Btn_Pressed_Counter == 3)
+            {
+                OnAttack3();
+            }
+            if (Sec_Combo_BtnPressed == 1 && Btn_Pressed_Counter == 2)
+            {
+                Debug.Log("Other Combo Completed!!");
+                ResetStart();
+            }
         }
+
+    }
+
+    public void OnSecBtnPressed(InputAction.CallbackContext context)
+    {
+        if (Btn_Pressed_Counter == 1 && context.performed)
+        {
+            Sec_Combo_BtnPressed++;
+            if(Btn_Pressed_Counter == 1 && Sec_Combo_BtnPressed == 1)
+            {
+                Debug.Log("Other Combo Incomplete!!");
+                Invoke("ResetStart", 1f);
+            }
+        }
+    }
+    public void OnAttack()
+    {
+        Debug.Log("Combo Started!! " + Btn_Pressed_Counter);
+        anim.SetTrigger("Attack");
+    }
+    public void OnAttack2()
+    {
+        Debug.Log("Combo Incomplete!! " + Btn_Pressed_Counter);
+        anim.SetTrigger("Attack2");
+        
+    }
+    public void OnAttack3()
+    {
+        Debug.Log("Combo COmpleted!! " + Btn_Pressed_Counter);
+        ResetStart();
+        anim.SetTrigger("Attack3");
+    }
+
+    void ResetStart()
+    {
+        Btn_Pressed_Counter = 0;
+        Sec_Combo_BtnPressed = 0;
     }
     public void OnJump(InputAction.CallbackContext context)
     {
@@ -91,10 +153,6 @@ public class BasicScript : MonoBehaviour
         }
         
     }
-    void Attack()
-    {
-        Debug.Log("Attack");
-    }
     void SpecialAttack()
     {
         StartCoroutine(Dash(12));
@@ -129,6 +187,17 @@ public class BasicScript : MonoBehaviour
     {
         isFacingright = !isFacingright;
         transform.Rotate(0, 180, 0);
+    }
+    public void OnSave()
+    {
+        SaveData.Save(this);
+    }
+    public void OnLoad()
+    {
+        SavingData sd = SaveData.Load();
+        newpos.x = sd.position[0];
+        newpos.y = sd.position[1];
+        transform.position = newpos;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

@@ -16,11 +16,13 @@ public class Enemy_AI : MonoBehaviour
     [SerializeField]int MoveDir;
     public Vector2 StartPos;
     RaycastHit2D hit;
+    RaycastHit2D backhit;
     public LayerMask DetectMask;
     RaycastHit2D PlayerDetect;
     public int JumpForce;
     Rigidbody2D rb;
     bool IsJumped = false;
+    bool isFlipped;
     public EnemyStates ES;
     // Start is called before the first frame update
     void Start()
@@ -35,6 +37,8 @@ public class Enemy_AI : MonoBehaviour
     void Update()
     {
         hit = Physics2D.Raycast(transform.position, transform.right, Dis);
+        backhit = Physics2D.Raycast(transform.position, -transform.right, Dis/2);
+        
         //Debug.DrawRay(transform.position, transform.right * Dis);
 
         Debug.DrawRay(transform.position, transform.right * Dis, Color.red);
@@ -57,29 +61,32 @@ public class Enemy_AI : MonoBehaviour
                 Movement();
                 break;
         }
+
+        
     }
 
     void Movement()
     {
         PlayerDetect = Physics2D.Raycast(transform.position, transform.right, Dis, DetectMask);
-        //rb.velocity = new Vector2(MoveDir* Movespeed,rb.velocity.y);
-        //transform.position = new Vector3(Mathf.Clamp(transform.position.x, StartPos.x-3, StartPos.x + 3), StartPos.y);
         transform.position += new Vector3(MoveDir * Movespeed * Time.deltaTime, 0);
 
-        if (transform.position.x >=StartPos.x + 3 || transform.position.x <=StartPos.x - 3)
+        if (transform.position.x >= StartPos.x + 3 || transform.position.x <= StartPos.x - 3)
         {
-            Flip();
+            if (!isFlipped)
+            {
+                Flip();
+            }
         }
-        
+        else
+        {
+            isFlipped = false;
+        }
         
         if (PlayerDetect)
         {
             ES = EnemyStates.Found;
         }
-        else
-        {
-            ES = EnemyStates.Patrol;
-        }
+        
     }
     void Stopped()
     {
@@ -89,43 +96,51 @@ public class Enemy_AI : MonoBehaviour
         }
         else
         {
-            Debug.Log("You can't escape!!");
-            StartCoroutine(Wait());    
-        }
-    }
-    void Follow()
-    {
-        //rb.velocity = new Vector2(MoveDir * Movespeed * 2, rb.velocity.y);
-        Vector2 TargetPos = new Vector2(PlayerDetect.transform.position.x-0.8f, PlayerDetect.transform.position.y);
-        transform.position = Vector2.MoveTowards(transform.position, TargetPos, Movespeed*1.5f * Time.deltaTime);
-        //transform.position += new Vector3(Movespeed*1.5f * Time.deltaTime, 0);
-        Debug.Log("Found You");
-        if (!PlayerDetect)
-        {
-            ES = EnemyStates.Patrol;
-        }
-        else
-        {
-            if(Vector2.Distance(transform.position,PlayerDetect.collider.transform.position)<= 0.8f)
+            if (hit.collider.CompareTag("Player"))
             {
-                ES = EnemyStates.Stop;
+                if (hit.distance >= 1.6f)
+                {
+                    ES = EnemyStates.Found;
+                }
             }
         }
-        
-        if (hit.collider.CompareTag("Wall"))
+        if (backhit.collider.CompareTag("Player"))
         {
-            if (hit.distance < 1.3f)
+            if (!isFlipped)
             {
-                ES = EnemyStates.Jump;
-            }
-            else
-            {
+                Flip();
                 ES = EnemyStates.Found;
             }
         }
         else
         {
-            ES = EnemyStates.Found;
+            isFlipped = false;
+        }
+    }
+    void Follow()
+    {
+        transform.position += new Vector3(Movespeed*1.5f*MoveDir * Time.deltaTime, 0);
+        Debug.Log("Found You");
+        if (PlayerDetect)
+        {
+            if (hit.distance <= 1.6f)
+            {
+                Debug.Log("Detected");
+                ES = EnemyStates.Stop;
+            }
+        }
+        else
+        {
+            ES = EnemyStates.Stop;
+        }
+        
+
+        if (hit.collider.CompareTag("Wall"))
+        {
+            if (hit.distance < 1.7f)
+            {
+                ES = EnemyStates.Jump;
+            }
         }
         
     }
@@ -139,8 +154,14 @@ public class Enemy_AI : MonoBehaviour
         else{
             rb.velocity = new Vector2(MoveDir* Movespeed,rb.velocity.y);
         }
-            //Debug.Log("Jumping");
-        if (!hit.collider.CompareTag("Wall"))
+        if (hit.collider.CompareTag("Wall"))
+        {
+            if (hit.distance < 1.3f)
+            {
+                ES = EnemyStates.Jump;
+            }
+        }
+        else
         {
             if (PlayerDetect)
             {
@@ -148,21 +169,17 @@ public class Enemy_AI : MonoBehaviour
             }
             else
             {
-                ES = EnemyStates.Patrol;
+                ES = EnemyStates.Stop;
             }
         }
     }
     void Flip()
     {
+        isFlipped = true;
         MoveDir *= -1;
         transform.Rotate(0, 180, 0);
     }
 
-    IEnumerator Wait()
-    {
-        yield return new WaitForSeconds(1f);
-        Flip();
-    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Ground"))
@@ -172,7 +189,16 @@ public class Enemy_AI : MonoBehaviour
             {
                 StartPos = transform.position;
 
+                if (!PlayerDetect)
+                {
+                    ES = EnemyStates.Patrol;
+                }
+                else
+                {
+                    ES = EnemyStates.Found;
+                }
             }
+
         }
     }
 }

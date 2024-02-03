@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum Enemy_Pos
-{
-    back,
-    front
-}
 public enum EStates
 {
     Patrol,
@@ -30,22 +25,9 @@ public class Enemy_AI1 : MonoBehaviour
     bool IsJumped = false;
     bool isFlipped;
     public EStates ES;
-    public Enemy_Pos Back_Front;
     float StopDis = 1.6f;
     // Start is called before the first frame update
-
-    private void Awake()
-    {
-        float R = Random.Range(0, 1);
-        if (R <= 0.1f)
-        {
-            Back_Front = Enemy_Pos.back;
-        }
-        else
-        {
-            Back_Front = Enemy_Pos.front;
-        }
-    }
+    
     void Start()
     {
         rb=GetComponent<Rigidbody2D>();
@@ -57,9 +39,9 @@ public class Enemy_AI1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        hit = Physics2D.Raycast(transform.position, transform.right, Dis);
-        backhit = Physics2D.Raycast(transform.position, -transform.right, Dis/2);
-        
+        CastingRay();
+        backhit = Physics2D.Raycast(transform.position, -transform.right, Dis / 2,DetectMask);
+
         //Debug.DrawRay(transform.position, transform.right * Dis);
 
         Debug.DrawRay(transform.position, transform.right * Dis, Color.red);
@@ -83,12 +65,17 @@ public class Enemy_AI1 : MonoBehaviour
                 break;
         }
 
-        
+        PlayerDetect = Physics2D.Raycast(transform.position, transform.right, Dis, DetectMask);
+
     }
 
+    float Gap(Vector3 pos1, Vector3 pos2)
+    {
+        float gap = pos1.x - pos2.x;
+        return gap;
+    }
     void Movement()
     {
-        PlayerDetect = Physics2D.Raycast(transform.position, transform.right, Dis, DetectMask);
         transform.position += new Vector3(MoveDir * Movespeed * Time.deltaTime, 0);
 
         if (transform.position.x >= StartPos.x + 3 || transform.position.x <= StartPos.x - 3)
@@ -109,34 +96,54 @@ public class Enemy_AI1 : MonoBehaviour
         }
         
     }
-    
+    RaycastHit2D CastingRay()
+    {
+        hit = Physics2D.Raycast(transform.position, transform.right, Dis);
+        return hit;
+    }
+
     void Stopped()
     {
         if (!PlayerDetect)
         {
-            ES = EStates.Patrol;
+            if (!isFlipped)
+            {
+                Flip();
+                if (PlayerDetect)
+                {
+                    ES = EStates.Found;
+                }
+            }
+            else{
+                isFlipped = false;
+                ES = EStates.Patrol;
+            }
         }
         else
         {
             if (hit.collider.CompareTag("Player"))
             {
-                if (Vector2.Distance(transform.position,hit.point) >= StopDis)
+                if (Gap(transform.position,hit.point) >= StopDis)
                 {
                     ES = EStates.Found;
                 }
             }
-        }
-        if (backhit.collider.CompareTag("Player"))
-        {
-            if (!isFlipped)
+            else
             {
-                Flip();
-                ES = EStates.Found;
+                if (!isFlipped)
+                {
+                    Flip();
+                    if (PlayerDetect)
+                    {
+                        ES = EStates.Found;
+                    }
+                }
+                else
+                {
+                    isFlipped = false;
+                    ES = EStates.Patrol;
+                }
             }
-        }
-        else
-        {
-            isFlipped = false;
         }
     }
     void Follow()
@@ -145,7 +152,7 @@ public class Enemy_AI1 : MonoBehaviour
         Debug.Log("Found You");
         if (PlayerDetect)
         {
-            if (Vector2.Distance(transform.position, hit.point) <= StopDis)
+            if (Gap(transform.position, hit.point) <= StopDis)
             {
                 Debug.Log("Detected");
                 ES = EStates.Stop;

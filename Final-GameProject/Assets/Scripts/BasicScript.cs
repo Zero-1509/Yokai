@@ -23,6 +23,7 @@ public class BasicScript : MonoBehaviour
     private float DashingTime = 0.3f;
     private float DashCD = 5f;
 
+    public static bool InMotion;
     /*private void Awake()
     {
         OnLoad();
@@ -39,9 +40,29 @@ public class BasicScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(transform.position.x + moveVector.x*speed * Time.deltaTime, transform.position.y + moveVector.y*speed*Time.deltaTime,0);
+        if (moveVector.x != 0)
+        {
+            InMotion = true;
+            transform.position = new Vector3(transform.position.x + moveVector.x*speed * Time.deltaTime, transform.position.y,0);
+        }
+        else
+        {
+            InMotion = false;
+        }
     }
-
+    public void OnDefend(InputAction.CallbackContext context)
+    {
+        if (context.duration > 0.05f)
+        {
+            anim.SetBool("Defend", true);
+            Debug.Log("Is Blocking");
+        }
+        if (context.canceled)
+        {
+            anim.SetBool("Defend", false);
+            Debug.Log("Is Not Blocking");
+        }
+    }
     public void OnMove(InputAction.CallbackContext context)
     {
         moveVector = context.ReadValue<Vector2>();

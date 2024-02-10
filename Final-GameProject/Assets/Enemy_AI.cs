@@ -9,6 +9,7 @@ public enum EnemyStates
     Patrol,
     Found,
     Jump,
+    Flee,
     Stop
 }
 public class Enemy_AI : MonoBehaviour
@@ -28,26 +29,28 @@ public class Enemy_AI : MonoBehaviour
     public EnemyStates ES;
     public LayerMask ExcludeLayers;
     public LayerMask CheckLayer;
+    public LayerMask EnemyLayer;
+    
+    public Collider2D[] cols;
     // Start is called before the first frame update
     void Start()
     {
-
         //Physics2D.queriesStartInColliders = false;
         rb=GetComponent<Rigidbody2D>();
         ES = EnemyStates.Patrol;
         StartPos = transform.position;
-        MoveDir = 1;
     }
+
 
     // Update is called once per frame
     void Update()
     {
         hit = Physics2D.Raycast(transform.position+transform.right, transform.right, Dis, ExcludeLayers);
-        
+        cols = Physics2D.OverlapCircleAll(transform.position, 8f, EnemyLayer);
+
         //Debug.DrawRay(transform.position, transform.right * Dis);
-
-        Debug.DrawRay(transform.position, transform.right * Dis, Color.red);
-
+        
+        Debug.DrawRay(transform.position+transform.right, transform.right * Dis, Color.red);
         switch (ES)
         {
             case EnemyStates.Patrol:
@@ -62,18 +65,73 @@ public class Enemy_AI : MonoBehaviour
             case EnemyStates.Stop:
                 Stopped();
                 break;
+            case EnemyStates.Flee:
+                Flee();
+                break;
             default:
                 Movement();
                 break;
         }
-
-        
     }
 
+    void Flee()
+    {
+        if (!isFlipped)
+        {
+            Flip();
+        }
+        transform.position += new Vector3(MoveDir * Movespeed * Time.deltaTime, 0);
+        RaycastHit2D hit2 = Physics2D.Raycast(transform.position, transform.right, 10, CheckLayer);
+        if (hit2)
+        {
+            if (hit2.distance <= 1.7f)
+            {
+                ES = EnemyStates.Jump;
+            }
+        }
+    }
+    IEnumerator FlipEverySec()
+    {
+        yield return new WaitForSecondsRealtime(1f);
+    }
     void Movement()
     {
         PlayerDetect = Physics2D.Raycast(transform.position + transform.right, transform.right, Dis, DetectMask);
         transform.position += new Vector3(MoveDir * Movespeed * Time.deltaTime, 0);
+
+
+        if (cols.Length > 1)
+        {
+            for (int i = 0; i < cols.Length; i++)
+            {
+                if (cols[i].GetComponent<Enemy_AI>().ES == EnemyStates.Found)
+                {
+                    Dis = 20;
+                    if (hit)
+                        ES = EnemyStates.Found;
+                    else if (!hit)
+                    {
+                        if (!IsJumped)
+                        {
+                            Flip();
+                            StartCoroutine(FlipEverySec());
+                        }
+                    }
+                }
+            }
+        }
+
+        if (PlayerDetect)
+        {
+            if(cols.Length == 1)
+            {
+                ES = EnemyStates.Flee;
+            }
+            else
+            {
+                ES = EnemyStates.Found;
+            }
+        }
 
         if (transform.position.x >= StartPos.x + 3 || transform.position.x <= StartPos.x - 3)
         {
@@ -85,11 +143,6 @@ public class Enemy_AI : MonoBehaviour
         else
         {
             isFlipped = false;
-        }
-        
-        if (PlayerDetect)
-        {
-            ES = EnemyStates.Found;
         }
         
     }
@@ -106,12 +159,19 @@ public class Enemy_AI : MonoBehaviour
                 Debug.Log("Gotchaaa!!");
                 ES = EnemyStates.Found;
             }
+            if (hit)
+            {
+                if (cols.Length == 1)
+                {
+                    Debug.Log("I beg You!!");
+                    ES = EnemyStates.Flee;
+                }
+            }
         }
         backhit = Physics2D.Raycast(transform.position-transform.right, -transform.right, Dis / 2,ExcludeLayers);
         if (backhit) {
             Debug.Log("There You Are!!!");
             Flip();
-            //ES = EnemyStates.Found;
         }
     }
     void Follow()
@@ -125,6 +185,8 @@ public class Enemy_AI : MonoBehaviour
                 Debug.Log("Detected");
                 ES = EnemyStates.Stop;
             }
+            
+
         }
         else
         {
@@ -162,11 +224,15 @@ public class Enemy_AI : MonoBehaviour
         }
         else
         {
-            if (PlayerDetect)
+            if (PlayerDetect && cols.Length>1)
             {
                 ES = EnemyStates.Found;
             }
-            else
+            else if (PlayerDetect && cols.Length==1)
+            {
+                ES = EnemyStates.Flee;
+            }
+            else if(!PlayerDetect)
             {
                 ES = EnemyStates.Stop;
             }

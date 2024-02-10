@@ -258,7 +258,7 @@
                 {
                     "name": "",
                     "id": "3a5269c4-fe3a-4f27-8632-30bb291c6498",
-                    "path": "<Mouse>/forwardButton",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard,Mouse",
@@ -283,7 +283,18 @@
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Controller",
+                    "action": "Defend",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f04b02f1-9c0f-4ca1-903c-911e50082e78",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard,Mouse",
                     "action": "Defend",
                     "isComposite": false,
                     "isPartOfComposite": false

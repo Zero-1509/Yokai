@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,6 +25,10 @@ public class BasicScript : MonoBehaviour
     private float DashCD = 5f;
 
     public static bool InMotion;
+
+    public GameObject AttackPoint;
+    public GameObject DefendPoint;
+
     /*private void Awake()
     {
         OnLoad();
@@ -35,15 +40,18 @@ public class BasicScript : MonoBehaviour
         isDashing = false;
         anim = GetComponent<Animator>();
         rb= GetComponent<Rigidbody2D>();
+        AttackPoint.SetActive(false);
+        DefendPoint.SetActive(false);
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (moveVector.x != 0)
         {
             InMotion = true;
-            transform.position = new Vector3(transform.position.x + moveVector.x*speed * Time.deltaTime, transform.position.y,0);
+            //transform.position = new Vector3(transform.position.x + moveVector.x*speed * Time.deltaTime, transform.position.y,0);
+            rb.velocity = new Vector2(moveVector.x*speed*Time.fixedDeltaTime, rb.velocity.y);
         }
         else
         {
@@ -219,6 +227,24 @@ public class BasicScript : MonoBehaviour
         newpos.x = sd.position[0];
         newpos.y = sd.position[1];
         transform.position = newpos;
+    }
+
+
+    public void AttackActivate()
+    {
+        AttackPoint.SetActive(true);
+    }
+    public void AttackDeactivate()
+    {
+        AttackPoint.SetActive(false);
+    }
+    public void DefenceActivate()
+    {
+        DefendPoint.SetActive(true);
+    }
+    public void DefenceDeactivate()
+    {
+        DefendPoint.SetActive(false);
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

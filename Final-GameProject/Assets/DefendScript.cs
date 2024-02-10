@@ -21,7 +21,7 @@ public class DefendScript : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawCube(transform.position, new Vector2(width, height));
+        //Gizmos.color = Color.yellow;
+        //Gizmos.DrawCube(transform.position, new Vector2(width, height));
     }
 }

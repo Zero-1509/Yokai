@@ -52,15 +52,7 @@ public class Enemy_AI : MonoBehaviour
         cols = Physics2D.OverlapCircleAll(transform.position, 8f, EnemyLayer);
 
 
-        if (transform.position.y <= 1.08f && !hit)
-        {
-            rb.gravityScale = 0f;
-            transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, 1.08f), 15f*Time.deltaTime);
-        }
-        else
-        {
-            rb.gravityScale = 1f;
-        }
+        
         //Debug.DrawRay(transform.position, transform.right * Dis);
         if (hit)
         {

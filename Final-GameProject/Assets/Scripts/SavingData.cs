@@ -7,7 +7,8 @@ using UnityEngine.UIElements;
 public class SavingData
 {
     public float[] position;
-
+    public int Exp;
+    public int Level;
     public SavingData(BasicScript Player) {
         position = new float[2];
         position[0] = Player.transform.position.x;

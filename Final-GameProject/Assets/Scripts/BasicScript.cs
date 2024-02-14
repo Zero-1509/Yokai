@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.InputSystem;
 
 public class BasicScript : MonoBehaviour
@@ -19,10 +20,6 @@ public class BasicScript : MonoBehaviour
     int Btn_Pressed_Counter;
     int Sec_Combo_BtnPressed;
 
-    public Vector2 RotationVector;
-    private float RotationVector2;
-    private float RotationVector3;
-    public GameObject RotationPoint;
 
     public bool canDash;
     public bool isDashing;
@@ -34,6 +31,9 @@ public class BasicScript : MonoBehaviour
     public GameObject AttackPoint;
     public GameObject DefendPoint;
 
+
+    [SerializeField] int Limit;
+    [SerializeField] int Level;
     /*private void Awake()
     {
         OnLoad();
@@ -41,6 +41,7 @@ public class BasicScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Level = PlayerPrefs.GetInt("Levels");
         canDash = true;
         isDashing = false;
         anim = GetComponent<Animator>();
@@ -50,14 +51,31 @@ public class BasicScript : MonoBehaviour
     }
     private void Update()
     {
-        
+        if(PlayerPrefs.GetFloat("Experience") > Limit)
+        {
+            Level++;
+            PlayerPrefs.SetInt("Levels",Level);
+            float Exp = PlayerPrefs.GetFloat("Experience") - Limit;
+            PlayerPrefs.SetFloat("Experience", Exp);
+        }
+
+        if(Level == 0)
+        {
+            Limit = 50;
+        }
+        if(Level == 1)
+        {
+            Limit = 70;
+        }
+        if(Level == 2)
+        {
+            Limit = 80;
+        }
+        if(Level == 3)
+        {
+            Limit = 100;
+        }
     }
-
-
-    /*public void OnRotation(InputAction.CallbackContext context)
-    {
-        SetRotationVector(context.ReadValue<Vector2>());
-    }*/
 
     // Update is called once per frame
     void FixedUpdate()
@@ -73,11 +91,7 @@ public class BasicScript : MonoBehaviour
             InMotion = false;
         }
     }
-    /*public void SetRotationVector(Vector2 dir)
-    {
-        RotationVector = dir;
-    }*/
-    public void OnDefend(InputAction.CallbackContext context)
+     public void OnDefend(InputAction.CallbackContext context)
     {
         if (context.duration > 0.05f)
         {

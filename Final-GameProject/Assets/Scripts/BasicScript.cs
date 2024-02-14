@@ -19,6 +19,11 @@ public class BasicScript : MonoBehaviour
     int Btn_Pressed_Counter;
     int Sec_Combo_BtnPressed;
 
+    public Vector2 RotationVector;
+    private float RotationVector2;
+    private float RotationVector3;
+    public GameObject RotationPoint;
+
     public bool canDash;
     public bool isDashing;
     private float DashingTime = 0.3f;
@@ -43,6 +48,16 @@ public class BasicScript : MonoBehaviour
         AttackPoint.SetActive(false);
         DefendPoint.SetActive(false);
     }
+    private void Update()
+    {
+        
+    }
+
+
+    /*public void OnRotation(InputAction.CallbackContext context)
+    {
+        SetRotationVector(context.ReadValue<Vector2>());
+    }*/
 
     // Update is called once per frame
     void FixedUpdate()
@@ -58,6 +73,10 @@ public class BasicScript : MonoBehaviour
             InMotion = false;
         }
     }
+    /*public void SetRotationVector(Vector2 dir)
+    {
+        RotationVector = dir;
+    }*/
     public void OnDefend(InputAction.CallbackContext context)
     {
         if (context.duration > 0.05f)

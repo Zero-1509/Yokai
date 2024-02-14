@@ -32,11 +32,14 @@ public class Enemy_AI : MonoBehaviour
     public LayerMask EnemyLayer;
     
     public Collider2D[] cols;
+
+    public static bool InCombat;
     // Start is called before the first frame update
     void Start()
     {
         //Physics2D.queriesStartInColliders = false;
-        rb=GetComponent<Rigidbody2D>();
+        InCombat = false;
+        rb =GetComponent<Rigidbody2D>();
         ES = EnemyStates.Patrol;
         StartPos = transform.position;
     }
@@ -48,8 +51,28 @@ public class Enemy_AI : MonoBehaviour
         hit = Physics2D.Raycast(transform.position+transform.right, transform.right, Dis, ExcludeLayers);
         cols = Physics2D.OverlapCircleAll(transform.position, 8f, EnemyLayer);
 
+
+        if (transform.position.y <= 1.08f && !hit)
+        {
+            rb.gravityScale = 0f;
+            transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, 1.08f), 15f*Time.deltaTime);
+        }
+        else
+        {
+            rb.gravityScale = 1f;
+        }
         //Debug.DrawRay(transform.position, transform.right * Dis);
-        
+        if (hit)
+        {
+            if(transform.position.x > hit.point.x)
+            {
+                MoveDir = -1;
+            }
+            if(transform.position.x < hit.point.x)
+            {
+                MoveDir = 1;
+            }
+        }
         Debug.DrawRay(transform.position+transform.right, transform.right * Dis, Color.red);
         switch (ES)
         {
@@ -156,6 +179,7 @@ public class Enemy_AI : MonoBehaviour
         {
             if (hit && hit.distance >= 1.6f)
             {
+                InCombat = true;
                 Debug.Log("Gotchaaa!!");
                 ES = EnemyStates.Found;
             }

@@ -10,7 +10,8 @@ public enum EnemyStates
     Found,
     Jump,
     Flee,
-    Stop
+    Stop,
+    Attack
 }
 public class Enemy_AI : MonoBehaviour
 {
@@ -33,6 +34,12 @@ public class Enemy_AI : MonoBehaviour
     
     public Collider2D[] cols;
 
+
+    int ReloadTime = 2;
+    float StartTime = 0;
+    public GameObject bullet;
+
+    bool DashFlip;
     public static bool InCombat;
     // Start is called before the first frame update
     void Start()
@@ -66,29 +73,125 @@ public class Enemy_AI : MonoBehaviour
             }
         }
         Debug.DrawRay(transform.position+transform.right, transform.right * Dis, Color.red);
-        switch (ES)
+        
+        if(tag == "HebikawaL")
         {
-            case EnemyStates.Patrol:
-                Movement();
-                break;
-            case EnemyStates.Found:
-                Follow();
-                break;
-            case EnemyStates.Jump:
-                Jumping();
-                break;
-            case EnemyStates.Stop:
-                Stopped();
-                break;
-            case EnemyStates.Flee:
-                Flee();
-                break;
-            default:
-                Movement();
-                break;
+            switch (ES)
+            {
+                case EnemyStates.Patrol:
+                    Movement();
+                    break;
+                case EnemyStates.Found:
+                    Follow();
+                    break;
+                case EnemyStates.Jump:
+                    Jumping();
+                    break;
+                case EnemyStates.Stop:
+                    Stopped();
+                    break;
+                case EnemyStates.Flee:
+                    Flee();
+                    break;
+                case EnemyStates.Attack:
+                    CloseAttack();
+                    break;
+                default:
+                    Movement();
+                    break;
+            }
+        }
+        else if(tag == "HebikawaR")
+        {
+            switch (ES)
+            {
+                case EnemyStates.Patrol:
+                    Movement();
+                    break;
+                case EnemyStates.Found:
+                    Follow();
+                    break;
+                case EnemyStates.Jump:
+                    Jumping();
+                    break;
+                case EnemyStates.Stop:
+                    Stopped();
+                    break;
+                case EnemyStates.Flee:
+                    Flee();
+                    break;
+                case EnemyStates.Attack:
+                    RAttack();
+                    break;
+                default:
+                    Movement();
+                    break;
+            }
+        }
+        else if(tag == "HebikawaH")
+        {
+            switch (ES)
+            {
+                case EnemyStates.Patrol:
+                    Movement();
+                    break;
+                case EnemyStates.Found:
+                    Follow();
+                    break;
+                case EnemyStates.Jump:
+                    Jumping();
+                    break;
+                case EnemyStates.Stop:
+                    Stopped();
+                    break;
+                case EnemyStates.Flee:
+                    Flee();
+                    break;
+                case EnemyStates.Attack:
+                    StartCoroutine(TankAttack());
+                    break;
+                default:
+                    Movement();
+                    break;
+            }
+        }
+        
+    }
+    void RAttack()
+    {
+        if (hit)
+        {
+            Shooting();
+            if (hit.distance >= 1.6f)
+            {
+                ES = EnemyStates.Found;
+            }
+        }
+        else
+        {
+            ES = EnemyStates.Patrol;
         }
     }
-
+    void CloseAttack()
+    {
+        Debug.Log("I am hitting");
+    }
+    IEnumerator TankAttack()
+    {
+        rb.velocity = new Vector2(MoveDir * Movespeed*3f,rb.velocity.y);
+        yield return new WaitForSeconds(2f);
+        rb.velocity = new Vector2(0,rb.velocity.y);
+        yield return new WaitForSeconds(7f);
+        if (hit)
+        {
+            StartCoroutine(TankAttack());
+        }
+        if (backhit)
+        {
+            MoveDir *= -1;
+            transform.Rotate(0, 180, 0);
+        }
+    }
     void Flee()
     {
         if (!isFlipped)
@@ -97,6 +200,15 @@ public class Enemy_AI : MonoBehaviour
         }
         transform.position += new Vector3(MoveDir * Movespeed * Time.deltaTime, 0);
         RaycastHit2D hit2 = Physics2D.Raycast(transform.position, transform.right, 10, CheckLayer);
+        backhit = Physics2D.Raycast(transform.position - transform.right, -transform.right, Dis / 2, ExcludeLayers);
+        /*if (cols.Length > 1)
+        {
+            ES = EnemyStates.Patrol;
+        }*/
+        if (!backhit)
+        {
+            ES = EnemyStates.Patrol;
+        }
         if (hit2)
         {
             if (hit2.distance <= 1.7f)
@@ -163,13 +275,13 @@ public class Enemy_AI : MonoBehaviour
     }
     void Stopped()
     {
-        if (!PlayerDetect)
+        if (!hit)
         {
             ES = EnemyStates.Patrol;
         }
         else
         {
-            if (hit && hit.distance >= 1.6f)
+            if (hit && hit.distance > 1.6f)
             {
                 InCombat = true;
                 Debug.Log("Gotchaaa!!");
@@ -181,6 +293,10 @@ public class Enemy_AI : MonoBehaviour
                 {
                     Debug.Log("I beg You!!");
                     ES = EnemyStates.Flee;
+                }
+                if (hit.distance <= 1.7f)
+                {
+                    ES = EnemyStates.Attack;
                 }
             }
         }
@@ -201,8 +317,6 @@ public class Enemy_AI : MonoBehaviour
                 Debug.Log("Detected");
                 ES = EnemyStates.Stop;
             }
-            
-
         }
         else
         {
@@ -261,6 +375,19 @@ public class Enemy_AI : MonoBehaviour
         transform.Rotate(0, 180, 0);
     }
 
+    void Shooting()
+    {
+        
+        if(StartTime < ReloadTime)
+        {
+            StartTime += Time.deltaTime;
+        }
+        else
+        {
+            Instantiate(bullet,transform.position+transform.right,Quaternion.identity);
+            StartTime = 0;
+        }
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Ground"))

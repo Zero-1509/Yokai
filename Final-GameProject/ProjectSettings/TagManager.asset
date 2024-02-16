@@ -9,6 +9,10 @@ TagManager:
   - Wall
   - AP
   - BP
+  - HebikawaL
+  - HebikawaR
+  - HebikawaH
+  - Bullet
   layers:
   - Default
   - TransparentFX

@@ -11,6 +11,7 @@ public enum EnemyStates
     Jump,
     Flee,
     Stop,
+    InAir,
     Attack
 }
 public class Enemy_AI : MonoBehaviour
@@ -22,7 +23,6 @@ public class Enemy_AI : MonoBehaviour
     RaycastHit2D hit;
     RaycastHit2D backhit;
     public LayerMask DetectMask;
-    RaycastHit2D PlayerDetect;
     public int JumpForce;
     Rigidbody2D rb;
     bool IsJumped = false;
@@ -39,8 +39,9 @@ public class Enemy_AI : MonoBehaviour
     float StartTime = 0;
     public GameObject bullet;
 
-    bool DashFlip;
+
     public static bool InCombat;
+    [SerializeField] Collider2D PlayerCol;
     // Start is called before the first frame update
     void Start()
     {
@@ -56,10 +57,10 @@ public class Enemy_AI : MonoBehaviour
     void Update()
     {
         hit = Physics2D.Raycast(transform.position+transform.right, transform.right, Dis, ExcludeLayers);
-        cols = Physics2D.OverlapCircleAll(transform.position, 8f, EnemyLayer);
+        cols = Physics2D.OverlapCircleAll(transform.position, 6f, EnemyLayer);
+        backhit = Physics2D.Raycast(transform.position - transform.right, -transform.right, Dis / 2, ExcludeLayers);
+        PlayerCol = Physics2D.OverlapCircle(transform.position, 3f,DetectMask);
 
-
-        
         //Debug.DrawRay(transform.position, transform.right * Dis);
         if (hit)
         {
@@ -96,6 +97,9 @@ public class Enemy_AI : MonoBehaviour
                 case EnemyStates.Attack:
                     CloseAttack();
                     break;
+                case EnemyStates.InAir:
+                    AirMove();
+                    break;
                 default:
                     Movement();
                     break;
@@ -122,6 +126,9 @@ public class Enemy_AI : MonoBehaviour
                     break;
                 case EnemyStates.Attack:
                     RAttack();
+                    break;
+                case EnemyStates.InAir:
+                    AirMove();
                     break;
                 default:
                     Movement();
@@ -159,12 +166,39 @@ public class Enemy_AI : MonoBehaviour
     }
     void RAttack()
     {
-        if (hit)
+        /*if (PlayerCol)
         {
             Shooting();
-            if (hit.distance >= 1.6f)
+            if (hit)
+            {
+                if (hit.distance >= 1.6f)
+                    ES = EnemyStates.Found;
+                else
+                    ES = EnemyStates.Attack;
+            }
+        }
+        else
+        {
+            ES = EnemyStates.Patrol;
+        }*/
+ /*       if (backhit)
+        {
+            Flip();
+        }
+        if (hit)
+        {
+            RAttack();
+        }*/
+        if (PlayerCol)
+        {
+            Shooting();
+            if (hit)
             {
                 ES = EnemyStates.Found;
+                if(hit.distance >= 1.6f)
+                {
+                    ES = EnemyStates.Attack;
+                }
             }
         }
         else
@@ -175,13 +209,30 @@ public class Enemy_AI : MonoBehaviour
     void CloseAttack()
     {
         Debug.Log("I am hitting");
+        if (backhit)
+        {
+            Flip();
+        }
+        if (hit)
+        {
+            CloseAttack();
+        }
+        if (PlayerCol!=null)
+        {
+            if (hit && hit.distance >= 1.6f)
+                ES = EnemyStates.Found;
+        }
+        else
+        {
+            ES = EnemyStates.Patrol;
+        }
     }
     IEnumerator TankAttack()
     {
         rb.velocity = new Vector2(MoveDir * Movespeed*3f,rb.velocity.y);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSecondsRealtime(2f);
         rb.velocity = new Vector2(0,rb.velocity.y);
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSecondsRealtime(7f);
         if (hit)
         {
             StartCoroutine(TankAttack());
@@ -200,18 +251,18 @@ public class Enemy_AI : MonoBehaviour
         }
         transform.position += new Vector3(MoveDir * Movespeed * Time.deltaTime, 0);
         RaycastHit2D hit2 = Physics2D.Raycast(transform.position, transform.right, 10, CheckLayer);
-        backhit = Physics2D.Raycast(transform.position - transform.right, -transform.right, Dis / 2, ExcludeLayers);
-        /*if (cols.Length > 1)
-        {
-            ES = EnemyStates.Patrol;
-        }*/
-        if (!backhit)
+        if (cols.Length > 1)
         {
             ES = EnemyStates.Patrol;
         }
+        if (hit && !backhit)
+        {
+            ES = EnemyStates.Patrol;
+            Flip();
+        }
         if (hit2)
         {
-            if (hit2.distance <= 1.7f)
+            if (hit2.distance <= 1.6f)
             {
                 ES = EnemyStates.Jump;
             }
@@ -219,11 +270,10 @@ public class Enemy_AI : MonoBehaviour
     }
     IEnumerator FlipEverySec()
     {
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(5f);
     }
     void Movement()
     {
-        PlayerDetect = Physics2D.Raycast(transform.position + transform.right, transform.right, Dis, DetectMask);
         transform.position += new Vector3(MoveDir * Movespeed * Time.deltaTime, 0);
 
 
@@ -248,7 +298,7 @@ public class Enemy_AI : MonoBehaviour
             }
         }
 
-        if (PlayerDetect)
+        if (hit)
         {
             if(cols.Length == 1)
             {
@@ -270,47 +320,70 @@ public class Enemy_AI : MonoBehaviour
         else
         {
             isFlipped = false;
-        }
-        
+        }      
     }
     void Stopped()
     {
-        if (!hit)
+        if (cols.Length == 1)
         {
-            ES = EnemyStates.Patrol;
+            Debug.Log("I beg You!!");
+            ES = EnemyStates.Flee;
         }
         else
         {
-            if (hit && hit.distance > 1.6f)
+            if (!hit)
             {
-                InCombat = true;
-                Debug.Log("Gotchaaa!!");
-                ES = EnemyStates.Found;
+                ES = EnemyStates.Patrol;
             }
-            if (hit)
+            else
             {
-                if (cols.Length == 1)
+
+                if (hit && hit.distance > 1.6f)
                 {
-                    Debug.Log("I beg You!!");
-                    ES = EnemyStates.Flee;
+                    InCombat = true;
+                    Debug.Log("Gotchaaa!!");
+                    ES = EnemyStates.Found;
                 }
-                if (hit.distance <= 1.7f)
+                if (hit)
                 {
-                    ES = EnemyStates.Attack;
+                    if (cols.Length == 1)
+                    {
+                        Debug.Log("I beg You!!");
+                        ES = EnemyStates.Flee;
+                    }
+                    if (hit.distance <= 1.7f)
+                    {
+                        ES = EnemyStates.Attack;
+                    }
                 }
+            }
+            if (backhit)
+            {
+                Debug.Log("There You Are!!!");
+                Flip();
             }
         }
-        backhit = Physics2D.Raycast(transform.position-transform.right, -transform.right, Dis / 2,ExcludeLayers);
-        if (backhit) {
-            Debug.Log("There You Are!!!");
-            Flip();
+    }
+    void AirMove()
+    {
+        rb.velocity = new Vector2(MoveDir * Movespeed, rb.velocity.y);
+        if (!IsJumped)
+        {
+            if (hit)
+            {
+                ES = EnemyStates.Found;
+            }
+            else
+            {
+                ES = EnemyStates.Patrol;
+            }
         }
     }
     void Follow()
     {
         transform.position += new Vector3(Movespeed*1.5f*MoveDir * Time.deltaTime, 0);
         Debug.Log("Found You");
-        if (PlayerDetect)
+        if (hit)
         {
             if (hit.distance <= 1.6f)
             {
@@ -326,43 +399,40 @@ public class Enemy_AI : MonoBehaviour
         RaycastHit2D hit2 = Physics2D.Raycast(transform.position, transform.right,10,CheckLayer);
         if (hit2)
         {
-            if (hit2.distance <= 1.7f)
+            if (hit2.distance <= 2f)
             {
                 ES = EnemyStates.Jump;
             }
         }
         
     }
-
     void Jumping()
     {
         if (!IsJumped)
         {
             rb.velocity=new Vector2(rb.velocity.x, JumpForce);
+            ES = EnemyStates.InAir;
             IsJumped = true;
-        }
-        else{
-            rb.velocity = new Vector2(MoveDir* Movespeed,rb.velocity.y);
         }
         RaycastHit2D hit2 = Physics2D.Raycast(transform.position, transform.right, 10,CheckLayer);
         if (hit2)
         {
-            if (hit2.distance < 1.3f)
+            if (hit2.distance < 1.5f)
             {
                 ES = EnemyStates.Jump;
             }
         }
         else
         {
-            if (PlayerDetect && cols.Length>1)
+            if (hit && cols.Length>1)
             {
                 ES = EnemyStates.Found;
             }
-            else if (PlayerDetect && cols.Length==1)
+            else if (hit && cols.Length==1)
             {
                 ES = EnemyStates.Flee;
             }
-            else if(!PlayerDetect)
+            else if(!hit)
             {
                 ES = EnemyStates.Stop;
             }
@@ -377,7 +447,7 @@ public class Enemy_AI : MonoBehaviour
 
     void Shooting()
     {
-        
+        StartPos = transform.position;
         if(StartTime < ReloadTime)
         {
             StartTime += Time.deltaTime;
@@ -397,7 +467,6 @@ public class Enemy_AI : MonoBehaviour
             {
                 StartPos = transform.position;
             }
-
         }
         if (collision.collider.CompareTag("Wall"))
         {

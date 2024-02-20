@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Net;
 using UnityEngine;
-using UnityEngine.Analytics;
 using UnityEngine.InputSystem;
 
 public class BasicScript : MonoBehaviour
@@ -51,7 +49,7 @@ public class BasicScript : MonoBehaviour
     }
     private void Update()
     {
-        if(PlayerPrefs.GetFloat("Experience") > Limit)
+        /*if(PlayerPrefs.GetFloat("Experience") > Limit)
         {
             Level++;
             PlayerPrefs.SetInt("Levels",Level);
@@ -75,8 +73,8 @@ public class BasicScript : MonoBehaviour
         {
             Limit = 100;
         }
+    }*/
     }
-
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -93,7 +91,7 @@ public class BasicScript : MonoBehaviour
     }
      public void OnDefend(InputAction.CallbackContext context)
     {
-        if (context.duration > 0.05f)
+        if (context.duration > 0.02f)
         {
             anim.SetBool("Defend", true);
             Debug.Log("Is Blocking");
@@ -137,7 +135,7 @@ public class BasicScript : MonoBehaviour
             }
             if (Sec_Combo_BtnPressed == 1 && Btn_Pressed_Counter == 2)
             {
-                Debug.Log("Other Combo Completed!!");
+                //Debug.Log("Other Combo Completed!!");
                 ResetStart();
             }
         }
@@ -151,25 +149,25 @@ public class BasicScript : MonoBehaviour
             Sec_Combo_BtnPressed++;
             if(Btn_Pressed_Counter == 1 && Sec_Combo_BtnPressed == 1)
             {
-                Debug.Log("Other Combo Incomplete!!");
+                //Debug.Log("Other Combo Incomplete!!");
                 Invoke("ResetStart", 1f);
             }
         }
     }
     public void OnAttack()
     {
-        Debug.Log("Combo Started!! " + Btn_Pressed_Counter);
+        //Debug.Log("Combo Started!! " + Btn_Pressed_Counter);
         anim.SetTrigger("Attack");
     }
     public void OnAttack2()
     {
-        Debug.Log("Combo Incomplete!! " + Btn_Pressed_Counter);
+        //Debug.Log("Combo Incomplete!! " + Btn_Pressed_Counter);
         anim.SetTrigger("Attack2");
         
     }
     public void OnAttack3()
     {
-        Debug.Log("Combo COmpleted!! " + Btn_Pressed_Counter);
+        //Debug.Log("Combo COmpleted!! " + Btn_Pressed_Counter);
         ResetStart();
         anim.SetTrigger("Attack3");
     }
@@ -190,7 +188,7 @@ public class BasicScript : MonoBehaviour
     {
         if (context.performed)
         {
-            StartCoroutine(Dash(7));
+            StartCoroutine(Dash());
         }
     }
     public void Special(InputAction.CallbackContext context)
@@ -217,23 +215,31 @@ public class BasicScript : MonoBehaviour
     }
     void SpecialAttack()
     {
-        StartCoroutine(Dash(12));
+        //Debug.Log("Behold Special Attack!!");
     }
     void Jump()
     {
-        Debug.Log("Jumped");
+        //Debug.Log("Jumped");
         canjump = false;
         rb.gravityScale = 1f;
-        rb.AddForce(Vector2.up * JumpForce);
+        rb.AddForce(transform.up * JumpForce);
+    }
+    public void Hide(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 
-
-    public IEnumerator Dash(int DPower)
+    public IEnumerator Dash()
     {
+
         isDashing = true;
         if (isDashing && canDash)
         {
-            rb.velocity = moveVector * DPower;
+            //Debug.Log("Dashing!!");
+            rb.velocity = transform.right * -10;
             yield return new WaitForSeconds(DashingTime);
         }
         canDash = false;

@@ -35,7 +35,9 @@ public class NewEnemyAI : MonoBehaviour
     public GameObject up;
     public GameObject Down;
 
+    bool onceFlip = true;
     public Collider2D[] cols;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,7 +45,6 @@ public class NewEnemyAI : MonoBehaviour
         InAir = false;
         rb = GetComponent<Rigidbody2D>();
     }
-    bool onceFlip;
     // Update is called once per frame
     void Update()
     {
@@ -103,7 +104,14 @@ public class NewEnemyAI : MonoBehaviour
         }
         else
         {
-            EW = EnemyWorks.Detected;
+            if (cols.Length == 1)
+            {
+                EW = EnemyWorks.Flee;
+            }
+            else
+            {
+                EW = EnemyWorks.Detected;
+            }
         }
     }
     IEnumerator Delay()
@@ -213,6 +221,7 @@ public class NewEnemyAI : MonoBehaviour
         if (onceFlip)
         {
             Flip();
+            onceFlip = false;
         }
         transform.position += new Vector3(MoveDir * movespeed * Time.deltaTime, 0);
         Otherhit = Physics2D.Raycast(transform.position, transform.right, maxDist / 2, OtherMask);
@@ -225,7 +234,8 @@ public class NewEnemyAI : MonoBehaviour
         }
     }
     void Attacking() {
-        Debug.Log("Attacking!!!");
+        Stamina_and_Health HealthPlayer = Playerhit.collider.gameObject.GetComponentInParent<Stamina_and_Health>();
+        HealthPlayer.Health -= Time.deltaTime;
     }
     void Attack()
     {
@@ -239,10 +249,11 @@ public class NewEnemyAI : MonoBehaviour
             {
                 EW = EnemyWorks.Detected;
             }
-        }
-        if (cols.Length == 1)
-        {
-            EW = EnemyWorks.Flee;
+
+            if (cols.Length == 1)
+            {
+                EW = EnemyWorks.Flee;
+            }
         }
         RaycastHit2D back = Physics2D.Raycast(transform.position,-transform.right,maxDist/2,PlayerMask);
         if (back)
@@ -252,7 +263,6 @@ public class NewEnemyAI : MonoBehaviour
     }
     void Flip()
     {
-        onceFlip = false;
         isFlipped = true;
         MoveDir *= -1;
         transform.Rotate(0, 180, 0);

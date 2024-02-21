@@ -803,7 +803,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.067114, y: -0.027999938, z: -10}
+  m_LocalPosition: {x: 5.064939, y: -0.027999938, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1035,7 +1035,7 @@ Transform:
   m_GameObject: {fileID: 695062034}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.067114, y: -0.027999938, z: -10}
+  m_LocalPosition: {x: 5.064939, y: -0.027999938, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1486,46 +1486,15 @@ GameObject:
   - component: {fileID: 818586625}
   - component: {fileID: 818586624}
   - component: {fileID: 818586623}
-  - component: {fileID: 818586622}
   - component: {fileID: 818586621}
-  - component: {fileID: 818586620}
+  - component: {fileID: 818586626}
   m_Layer: 9
   m_Name: Dynamic Sprite (1)
-  m_TagString: HebikawaL
+  m_TagString: HebikawaR
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &818586620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 818586619}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8a17a3cdba5b354b93cc8cc3673b1bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movespeed: 2
-  JS: 8
-  maxDist: 10
-  MoveDir: 1
-  EW: 0
-  StartPos: {x: 0, y: 0}
-  PlayerMask:
-    serializedVersion: 2
-    m_Bits: 128
-  OtherMask:
-    serializedVersion: 2
-    m_Bits: 1024
-  EnemyMask:
-    serializedVersion: 2
-    m_Bits: 512
-  up: {fileID: 1902523863}
-  Down: {fileID: 985981972}
-  cols: []
 --- !u!58 &818586621
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1561,39 +1530,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &818586622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 818586619}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 287ce45d1c8a41a49b522bf62b624ffb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Movespeed: 2
-  Dis: 10
-  MoveDir: 1
-  StartPos: {x: 0, y: 0}
-  DetectMask:
-    serializedVersion: 2
-    m_Bits: 128
-  JumpForce: 7
-  ES: 0
-  ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  CheckLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  EnemyLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  cols: []
-  bullet: {fileID: 273729792181688144, guid: efe0c3c4196efa44ba13cfe66962ae3b, type: 3}
-  PlayerCol: {fileID: 0}
 --- !u!50 &818586623
 Rigidbody2D:
   serializedVersion: 4
@@ -1691,6 +1627,37 @@ Transform:
   - {fileID: 985981973}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &818586626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818586619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4edf4f0b8ec57342b32c9e481472ab4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movespeed: 2
+  JS: 8
+  maxDist: 10
+  MoveDir: 1
+  EW: 0
+  StartPos: {x: 0, y: 0}
+  PlayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  OtherMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  EnemyMask:
+    serializedVersion: 2
+    m_Bits: 512
+  up: {fileID: 1902523863}
+  Down: {fileID: 985981972}
+  bullet: {fileID: 273729792181688144, guid: efe0c3c4196efa44ba13cfe66962ae3b, type: 3}
+  cols: []
 --- !u!1 &819946399
 GameObject:
   m_ObjectHideFlags: 0
@@ -7194,9 +7161,8 @@ GameObject:
   - component: {fileID: 1023414379}
   - component: {fileID: 1023414378}
   - component: {fileID: 1023414377}
-  - component: {fileID: 1023414376}
   - component: {fileID: 1023414375}
-  - component: {fileID: 1023414380}
+  - component: {fileID: 1023414381}
   m_Layer: 9
   m_Name: Dynamic Sprite
   m_TagString: HebikawaL
@@ -7239,39 +7205,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &1023414376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023414374}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 287ce45d1c8a41a49b522bf62b624ffb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Movespeed: 2
-  Dis: 10
-  MoveDir: 1
-  StartPos: {x: 0, y: 0}
-  DetectMask:
-    serializedVersion: 2
-    m_Bits: 128
-  JumpForce: 7
-  ES: 0
-  ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  CheckLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  EnemyLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  cols: []
-  bullet: {fileID: 273729792181688144, guid: efe0c3c4196efa44ba13cfe66962ae3b, type: 3}
-  PlayerCol: {fileID: 0}
 --- !u!50 &1023414377
 Rigidbody2D:
   serializedVersion: 4
@@ -7369,7 +7302,7 @@ Transform:
   - {fileID: 555871260}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1023414380
+--- !u!114 &1023414381
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7378,7 +7311,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1023414374}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8a17a3cdba5b354b93cc8cc3673b1bb, type: 3}
+  m_Script: {fileID: 11500000, guid: b4edf4f0b8ec57342b32c9e481472ab4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   movespeed: 2
@@ -7398,6 +7331,7 @@ MonoBehaviour:
     m_Bits: 512
   up: {fileID: 141412207}
   Down: {fileID: 555871259}
+  bullet: {fileID: 273729792181688144, guid: efe0c3c4196efa44ba13cfe66962ae3b, type: 3}
   cols: []
 --- !u!1 &1069056937
 GameObject:
@@ -9097,46 +9031,15 @@ GameObject:
   - component: {fileID: 2112224367}
   - component: {fileID: 2112224366}
   - component: {fileID: 2112224365}
-  - component: {fileID: 2112224364}
   - component: {fileID: 2112224363}
-  - component: {fileID: 2112224362}
+  - component: {fileID: 2112224368}
   m_Layer: 9
   m_Name: Dynamic Sprite (2)
-  m_TagString: HebikawaL
+  m_TagString: HebikawaH
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2112224362
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2112224361}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8a17a3cdba5b354b93cc8cc3673b1bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movespeed: 2
-  JS: 8
-  maxDist: 10
-  MoveDir: -1
-  EW: 0
-  StartPos: {x: 0, y: 0}
-  PlayerMask:
-    serializedVersion: 2
-    m_Bits: 128
-  OtherMask:
-    serializedVersion: 2
-    m_Bits: 1024
-  EnemyMask:
-    serializedVersion: 2
-    m_Bits: 512
-  up: {fileID: 1872007092}
-  Down: {fileID: 1617780019}
-  cols: []
 --- !u!58 &2112224363
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -9172,39 +9075,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &2112224364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2112224361}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 287ce45d1c8a41a49b522bf62b624ffb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Movespeed: 2
-  Dis: 10
-  MoveDir: 1
-  StartPos: {x: 0, y: 0}
-  DetectMask:
-    serializedVersion: 2
-    m_Bits: 128
-  JumpForce: 7
-  ES: 0
-  ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  CheckLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  EnemyLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  cols: []
-  bullet: {fileID: 273729792181688144, guid: efe0c3c4196efa44ba13cfe66962ae3b, type: 3}
-  PlayerCol: {fileID: 0}
 --- !u!50 &2112224365
 Rigidbody2D:
   serializedVersion: 4
@@ -9302,6 +9172,37 @@ Transform:
   - {fileID: 1617780020}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &2112224368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112224361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4edf4f0b8ec57342b32c9e481472ab4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movespeed: 2
+  JS: 8
+  maxDist: 10
+  MoveDir: -1
+  EW: 0
+  StartPos: {x: 0, y: 0}
+  PlayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  OtherMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  EnemyMask:
+    serializedVersion: 2
+    m_Bits: 512
+  up: {fileID: 1872007092}
+  Down: {fileID: 1617780019}
+  bullet: {fileID: 273729792181688144, guid: efe0c3c4196efa44ba13cfe66962ae3b, type: 3}
+  cols: []
 --- !u!1 &3141147603463286263
 GameObject:
   m_ObjectHideFlags: 0

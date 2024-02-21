@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public enum EnemyWorks
 {
     Idle,
@@ -13,19 +12,19 @@ public enum EnemyWorks
     Flee,
     Attack
 }
-public class NewEnemyAI : MonoBehaviour
+public class EnemyAIFull : MonoBehaviour
 {
     public int movespeed;
     public int JS;
     public int maxDist = 10;
-    [SerializeField] int MoveDir=1;
+    [SerializeField] int MoveDir = 1;
     RaycastHit2D Playerhit;
     RaycastHit2D PlayerJumphit;
     RaycastHit2D PlayerDownhit;
     RaycastHit2D Otherhit;
     Rigidbody2D rb;
     public EnemyWorks EW;
-    [SerializeField]Vector2 StartPos;
+    [SerializeField] Vector2 StartPos;
     bool isFlipped;
     bool InAir = false;
     public LayerMask PlayerMask;
@@ -35,15 +34,31 @@ public class NewEnemyAI : MonoBehaviour
     public GameObject up;
     public GameObject Down;
 
+    public GameObject bullet;
     bool onceFlip = true;
     public Collider2D[] cols;
+    RaycastHit2D back;
 
+    float MinDis;
     // Start is called before the first frame update
     void Start()
     {
         StartPos = transform.position;
         InAir = false;
         rb = GetComponent<Rigidbody2D>();
+
+        if (CompareTag("HebikawaL"))
+        {
+            MinDis = 1.7f;
+        }
+        if (CompareTag("HebikawaR"))
+        {
+            MinDis = 3f;
+        }
+        if (CompareTag("HebikawaH"))
+        {
+            MinDis = 4f;
+        }
     }
     // Update is called once per frame
     void Update()
@@ -51,21 +66,9 @@ public class NewEnemyAI : MonoBehaviour
         Playerhit = Physics2D.Raycast(transform.position, transform.right, maxDist, PlayerMask);
         PlayerJumphit = Physics2D.Raycast(up.transform.position, transform.right, maxDist, PlayerMask);
         PlayerDownhit = Physics2D.Raycast(Down.transform.position, transform.right, maxDist, PlayerMask);
-
+        back = Physics2D.Raycast(transform.position, -transform.right, maxDist / 2, PlayerMask);
         cols = Physics2D.OverlapCircleAll(transform.position, 6f, EnemyMask);
-        Debug.DrawRay(transform.position, transform.right*maxDist, Color.green);
-        /*if (Playerhit)
-        {
-            if (transform.position.x > Playerhit.point.x)
-            {
-                MoveDir = -1;
-            }
-            if (transform.position.x < Playerhit.point.x)
-            {
-                MoveDir = 1;
-            }
-        }*/
-
+        Debug.DrawRay(transform.position, transform.right * maxDist, Color.green);
 
         switch (EW)
         {
@@ -128,6 +131,7 @@ public class NewEnemyAI : MonoBehaviour
             {
                 if (!isFlipped)
                 {
+                    StartCoroutine(Delay());
                     Flip();
                 }
             }
@@ -136,20 +140,21 @@ public class NewEnemyAI : MonoBehaviour
                 isFlipped = false;
             }
         }
-
-        if (cols.Length > 1)
-        {
-            for (int i = 0; i < cols.Length; i++)
+        
+            if (cols.Length > 1)
             {
-                if (cols[i].GetComponent<NewEnemyAI>().EW == EnemyWorks.Detected)
+                for (int i = 0; i < cols.Length; i++)
                 {
-                    maxDist = 20;
-                    if (Playerhit || PlayerJumphit || PlayerDownhit)
-                        EW = EnemyWorks.Detected;
-                    
+                    if (cols[i].GetComponent<EnemyAIFull>().EW == EnemyWorks.Detected)
+                    {
+                        maxDist = 20;
+                        if (Playerhit || PlayerJumphit || PlayerDownhit)
+                            EW = EnemyWorks.Detected;
+
+                    }
                 }
             }
-        }
+        
         if (Playerhit || PlayerJumphit || PlayerDownhit)
         {
             EW = EnemyWorks.Detected;
@@ -160,7 +165,7 @@ public class NewEnemyAI : MonoBehaviour
         if (Playerhit || PlayerJumphit || PlayerDownhit)
         {
             transform.position += new Vector3(movespeed * 1.5f * MoveDir * Time.deltaTime, 0);
-            if (Playerhit.distance <= 2)
+            if (Playerhit.distance <= MinDis)
             {
                 EW = EnemyWorks.Attack;
             }
@@ -202,7 +207,7 @@ public class NewEnemyAI : MonoBehaviour
     }
     void Air()
     {
-        if(InAir)
+        if (InAir)
             rb.velocity = new Vector2(MoveDir * movespeed, rb.velocity.y);
         else
         {
@@ -233,15 +238,61 @@ public class NewEnemyAI : MonoBehaviour
             }
         }
     }
-    void Attacking() {
-        Stamina_and_Health HealthPlayer = Playerhit.collider.gameObject.GetComponentInParent<Stamina_and_Health>();
-        HealthPlayer.Health -= Time.deltaTime;
+
+    float StartTime = 0;
+    int ShootTime = 2;
+    float Starttime = 0;
+    int CD = 3;
+    int Wait = 2;
+    void Attacking()
+    {
+        if (CompareTag("HebikawaL"))
+        {
+            Stamina_and_Health HealthPlayer = Playerhit.collider.gameObject.GetComponentInParent<Stamina_and_Health>();
+            HealthPlayer.Health -= Time.deltaTime;
+        }
+        if (CompareTag("HebikawaR"))
+        {
+            if (ShootTime > StartTime)
+            {
+                StartTime += Time.deltaTime;
+            }
+            else
+            {
+                Instantiate(bullet, transform.position + transform.right, Quaternion.identity);
+                StartTime = 0;
+            }
+        }
+        if (CompareTag("HebikawaH"))
+        {
+            if (Starttime < CD)
+            {
+                Starttime += Time.deltaTime;
+            }
+            else
+            {
+                Starttime += Time.deltaTime;
+                if(Starttime < (Wait + CD))
+                {
+                    rb.velocity = transform.right * 30;
+                    Starttime = 0;
+                    if (Playerhit)
+                    {
+                        EW = EnemyWorks.Attack;
+                    }
+                    if (back)
+                    {
+                        Flip();
+                    }
+                }
+            }
+        }
     }
     void Attack()
     {
         if (Playerhit || PlayerJumphit || PlayerDownhit)
         {
-            if (Playerhit.distance <= 2)
+            if (Playerhit.distance <= MinDis)
             {
                 Attacking();
             }
@@ -249,13 +300,15 @@ public class NewEnemyAI : MonoBehaviour
             {
                 EW = EnemyWorks.Detected;
             }
-
-            if (cols.Length == 1)
+            if (CompareTag("HebikawaL") || CompareTag("HebikawaR"))
             {
-                EW = EnemyWorks.Flee;
+                if (cols.Length == 1)
+                {
+                    EW = EnemyWorks.Flee;
+                }
             }
         }
-        RaycastHit2D back = Physics2D.Raycast(transform.position,-transform.right,maxDist/2,PlayerMask);
+        
         if (back)
         {
             Flip();
@@ -264,6 +317,7 @@ public class NewEnemyAI : MonoBehaviour
     void Flip()
     {
         isFlipped = true;
+        onceFlip = true;
         MoveDir *= -1;
         transform.Rotate(0, 180, 0);
     }
@@ -280,6 +334,10 @@ public class NewEnemyAI : MonoBehaviour
         if (collision.collider.CompareTag("Wall"))
         {
             Flip();
+        }
+        if (collision.collider.CompareTag("Player"))
+        {
+            rb.velocity = Vector2.zero;
         }
     }
 }

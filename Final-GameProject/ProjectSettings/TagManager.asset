@@ -5,6 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - Enemy
+  - Wall
+  - AP
+  - BP
+  - HebikawaL
+  - HebikawaR
+  - HebikawaH
+  - Bullet
+  - Trap
   layers:
   - Default
   - TransparentFX
@@ -13,10 +22,10 @@ TagManager:
   - Water
   - UI
   - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Ground
+  - Enemy
+  - Wall
   - 
   - 
   - 

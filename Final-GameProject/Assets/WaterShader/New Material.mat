@@ -143,7 +143,7 @@ Material:
     - _ZTest: 8
     - _ZWrite: 0
     - _ZWriteControl: 0
-    - _alpha: 0.7
+    - _alpha: 0.8
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

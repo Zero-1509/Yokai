@@ -20,8 +20,8 @@ public class AttackScript : MonoBehaviour
         Collider2D col = Physics2D.OverlapCircle(transform.position,radius, DetectLayer);
 
         if (col){
-            Debug.Log("Hit "+ col.name);
-            Destroy(col.gameObject);
+            //Debug.Log("Hit "+ col.name);
+            col.GetComponent<Enemy_Stats>().HUpdates(10);
             float GotXP = Random.Range(30, 70);
             ExpPoints += GotXP;
             PlayerPrefs.SetFloat("Experience", ExpPoints);
@@ -29,6 +29,6 @@ public class AttackScript : MonoBehaviour
     }
     private void OnDrawGizmos(){
         Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(transform.position, radius);
+        Gizmos.DrawWireSphere(transform.position, radius);
     }
 }

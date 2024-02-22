@@ -14,7 +14,7 @@ public enum EnemyWorks
 }
 public class EnemyAIFull : MonoBehaviour
 {
-    public int movespeed;
+    public float movespeed;
     public int JS;
     public int maxDist = 10;
     [SerializeField] int MoveDir = 1;
@@ -40,13 +40,17 @@ public class EnemyAIFull : MonoBehaviour
     RaycastHit2D back;
 
     float MinDis;
+
+    public float MyDamage;
+
     // Start is called before the first frame update
     void Start()
     {
         StartPos = transform.position;
         InAir = false;
         rb = GetComponent<Rigidbody2D>();
-
+        movespeed = this.gameObject.GetComponent<Enemy_Stats>().MoveSpeed;
+        MyDamage = this.gameObject.GetComponent<Enemy_Stats>().AttackPower;
         if (CompareTag("HebikawaL"))
         {
             MinDis = 1.7f;
@@ -98,6 +102,7 @@ public class EnemyAIFull : MonoBehaviour
                 break;
         }
     }
+    #region States
     void Idle()
     {
         if (!Playerhit && !PlayerJumphit && !PlayerDownhit)
@@ -107,14 +112,7 @@ public class EnemyAIFull : MonoBehaviour
         }
         else
         {
-            if (cols.Length == 1)
-            {
-                EW = EnemyWorks.Flee;
-            }
-            else
-            {
-                EW = EnemyWorks.Detected;
-            }
+            EW = EnemyWorks.Detected;
         }
     }
     IEnumerator Delay()
@@ -207,8 +205,14 @@ public class EnemyAIFull : MonoBehaviour
     }
     void Air()
     {
+        float speeed;
+        if (CompareTag("HebikawaH"))
+            speeed = movespeed * 2;
+        else
+            speeed = movespeed;
+
         if (InAir)
-            rb.velocity = new Vector2(MoveDir * movespeed, rb.velocity.y);
+            rb.velocity = new Vector2(MoveDir * speeed, rb.velocity.y);
         else
         {
             if (Playerhit || PlayerJumphit || PlayerDownhit)
@@ -238,7 +242,7 @@ public class EnemyAIFull : MonoBehaviour
             }
         }
     }
-
+    #region Attacks
     float StartTime = 0;
     int ShootTime = 2;
     float Starttime = 0;
@@ -314,6 +318,8 @@ public class EnemyAIFull : MonoBehaviour
             Flip();
         }
     }
+    #endregion
+    #endregion
     void Flip()
     {
         isFlipped = true;
@@ -326,10 +332,6 @@ public class EnemyAIFull : MonoBehaviour
         if (collision.collider.CompareTag("Ground"))
         {
             InAir = false;
-            if (!InAir)
-            {
-                StartPos = transform.position;
-            }
         }
         if (collision.collider.CompareTag("Wall"))
         {
@@ -337,6 +339,7 @@ public class EnemyAIFull : MonoBehaviour
         }
         if (collision.collider.CompareTag("Player"))
         {
+            collision.gameObject.GetComponent<Stamina_and_Health>().Health -= MyDamage;
             rb.velocity = Vector2.zero;
         }
     }

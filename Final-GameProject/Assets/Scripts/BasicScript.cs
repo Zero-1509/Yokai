@@ -234,7 +234,6 @@ public class BasicScript : MonoBehaviour
 
     public IEnumerator Dash()
     {
-
         isDashing = true;
         if (isDashing && canDash)
         {
@@ -247,9 +246,6 @@ public class BasicScript : MonoBehaviour
         yield return new WaitForSeconds(DashCD);
         canDash = true;
     }
-
-
-
 
     void Flip()
     {

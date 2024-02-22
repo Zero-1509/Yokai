@@ -20,11 +20,10 @@ public class AttackScript : MonoBehaviour
         Collider2D col = Physics2D.OverlapCircle(transform.position,radius, DetectLayer);
 
         if (col){
-            //Debug.Log("Hit "+ col.name);
-            col.GetComponent<Enemy_Stats>().HUpdates(10);
-            float GotXP = Random.Range(30, 70);
+           col.GetComponent<Enemy_Stats>().HUpdates(10);
+            /*float GotXP = Random.Range(30, 70);
             ExpPoints += GotXP;
-            PlayerPrefs.SetFloat("Experience", ExpPoints);
+            PlayerPrefs.SetFloat("Experience", ExpPoints);*/
         }
     }
     private void OnDrawGizmos(){

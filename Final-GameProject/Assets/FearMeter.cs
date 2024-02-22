@@ -31,7 +31,7 @@ public class FearMeter : MonoBehaviour
         Allies = cols.Length;
         AlliesPercent = Allies * 100 / 4;
         My_Meter_Value = AlliesPercent;
-        if (My_Meter_Value <= Min_Value)
+        if (My_Meter_Value <= Min_Value && Allies_Nearby.Playerhit)
         {
             Allies_Nearby.EW = EnemyWorks.Flee;
         }

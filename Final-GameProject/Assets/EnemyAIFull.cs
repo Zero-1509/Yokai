@@ -18,9 +18,9 @@ public class EnemyAIFull : MonoBehaviour
     public int JS;
     public int maxDist = 10;
     [SerializeField] int MoveDir = 1;
-    RaycastHit2D Playerhit;
-    RaycastHit2D PlayerJumphit;
-    RaycastHit2D PlayerDownhit;
+    public RaycastHit2D Playerhit;
+    public RaycastHit2D PlayerJumphit;
+    public RaycastHit2D PlayerDownhit;
     RaycastHit2D Otherhit;
     Rigidbody2D rb;
     public EnemyWorks EW;

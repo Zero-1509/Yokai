@@ -29,7 +29,7 @@ public class Enemy_Stats : MonoBehaviour
             AttackPower = Random.Range(10, 18);
             MoveSpeed = Random.Range(0.8f, 1.3f);
         }
-        Strength = Health + AttackPower;
+        Strength = (Health + AttackPower)/2;
     }
     // Update is called once per frame
    

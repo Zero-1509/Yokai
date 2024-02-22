@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class Stamina_and_Health : MonoBehaviour
 {
@@ -39,7 +40,12 @@ public class Stamina_and_Health : MonoBehaviour
             Health += 5 * Time.deltaTime;
         }
     }
-    
+
+
+    public void RestartScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
     void HealthManage()
     {
         var main = HealthUpdate.main;
@@ -69,6 +75,10 @@ public class Stamina_and_Health : MonoBehaviour
         if (Health <= 20)
         {
             main.simulationSpeed = 8.5f;
+        }
+        if (Health <= 0)
+        {
+            RestartScene();
         }
     }
 

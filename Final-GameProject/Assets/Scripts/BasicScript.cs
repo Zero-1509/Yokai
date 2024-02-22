@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class BasicScript : MonoBehaviour
 {
@@ -263,7 +264,6 @@ public class BasicScript : MonoBehaviour
         newpos.y = sd.position[1];
         transform.position = newpos;
     }
-
 
     public void AttackActivate()
     {

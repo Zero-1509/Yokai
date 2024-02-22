@@ -40,7 +40,7 @@ public class Spawner : MonoBehaviour
             AttackPower = Random.Range(10, 18);
             MoveSpeed = Random.Range(0.8f, 1.3f);
         }
-        SpawnStrength = 100;
+        SpawnStrength = 70;
         MaxCount = 5;
     }
 

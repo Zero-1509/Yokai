@@ -57,7 +57,7 @@ public class EnemyAIFull : MonoBehaviour
         }
         if (CompareTag("HebikawaR"))
         {
-            MinDis = 3f;
+            MinDis = 5f;
         }
         if (CompareTag("HebikawaH"))
         {
@@ -117,6 +117,7 @@ public class EnemyAIFull : MonoBehaviour
     }
     IEnumerator Delay()
     {
+        EW = EnemyWorks.Idle;
         yield return new WaitForSeconds(1f);
         EW = EnemyWorks.Patrol;
     }
@@ -138,21 +139,20 @@ public class EnemyAIFull : MonoBehaviour
                 isFlipped = false;
             }
         }
-        
-            if (cols.Length > 1)
+        if (cols.Length > 1)
+        {
+            for (int i = 0; i < cols.Length; i++)
             {
-                for (int i = 0; i < cols.Length; i++)
+                if (cols[i].GetComponent<EnemyAIFull>().EW == EnemyWorks.Detected)
                 {
-                    if (cols[i].GetComponent<EnemyAIFull>().EW == EnemyWorks.Detected)
-                    {
-                        maxDist = 20;
-                        if (Playerhit || PlayerJumphit || PlayerDownhit)
-                            EW = EnemyWorks.Detected;
+                    maxDist = 20;
+                    if (Playerhit || PlayerJumphit || PlayerDownhit)
+                        EW = EnemyWorks.Detected;
 
-                    }
                 }
             }
-        
+        }
+
         if (Playerhit || PlayerJumphit || PlayerDownhit)
         {
             EW = EnemyWorks.Detected;
@@ -243,31 +243,51 @@ public class EnemyAIFull : MonoBehaviour
         }
     }
     #region Attacks
+
     float StartTime = 0;
     int ShootTime = 2;
     float Starttime = 0;
     int CD = 3;
     int Wait = 2;
+    bool Shot;
     void Attacking()
     {
-        if (CompareTag("HebikawaL"))
+        if (CompareTag("HebikawaL") && Playerhit)
         {
             Stamina_and_Health HealthPlayer = Playerhit.collider.gameObject.GetComponentInParent<Stamina_and_Health>();
-            HealthPlayer.Health -= Time.deltaTime;
+            BasicScript DefenceCheck = Playerhit.collider.gameObject.GetComponentInParent<BasicScript>();
+            if (!DefenceCheck.isDefending)
+            {
+                HealthPlayer.Health -= Time.deltaTime;
+            }
+            else
+            {
+                HealthPlayer.Health -= Time.deltaTime*0.1f;
+            }
         }
-        if (CompareTag("HebikawaR"))
+        if (CompareTag("HebikawaR") && Playerhit)
         {
             if (ShootTime > StartTime)
             {
                 StartTime += Time.deltaTime;
+                if (Shot)
+                {
+                    if(Playerhit.distance <=MinDis-1)
+                        transform.position -= transform.right * movespeed * Time.deltaTime;
+                    else
+                    {
+                        Shot = false;
+                    }
+                }
             }
             else
             {
                 Instantiate(bullet, transform.position + transform.right, Quaternion.identity);
+                Shot = true;
                 StartTime = 0;
             }
         }
-        if (CompareTag("HebikawaH"))
+        if (CompareTag("HebikawaH") && Playerhit)
         {
             if (Starttime < CD)
             {
@@ -339,8 +359,15 @@ public class EnemyAIFull : MonoBehaviour
         }
         if (collision.collider.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<Stamina_and_Health>().Health -= MyDamage;
-            rb.velocity = Vector2.zero;
+            if (!collision.gameObject.GetComponent<BasicScript>().isDefending)
+            {
+                collision.gameObject.GetComponent<Stamina_and_Health>().Health -= MyDamage;
+                rb.velocity = Vector2.zero;
+            }
+            else
+            {
+                collision.gameObject.GetComponent<Stamina_and_Health>().Health -= MyDamage*0.1f;
+            }
         }
     }
 }

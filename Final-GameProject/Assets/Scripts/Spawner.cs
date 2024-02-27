@@ -41,21 +41,23 @@ public class Spawner : MonoBehaviour
             MoveSpeed = Random.Range(0.8f, 1.3f);
         }
         SpawnStrength = 70;
-        MaxCount = 5;
+        MaxCount = 3;
     }
 
     public void SpawnWait()
     {
+        float TempPower = SpawnStrength / MaxCount;
         GameObject Enemy = Instantiate(Enemies[Random.Range(0, Enemies.Length)], transform.position, Quaternion.identity);
         SpawnStrength -= Enemy.GetComponent<Enemy_Stats>().Strength;
     }
     // Update is called once per frame
     float StartTime = 0;
-    int MaxTime = 4;
+    int MaxTime = 8;
     void Update()
     {
-        for(int i=0;i<MaxCount; i++)
+        for (int i=0;i<MaxCount; i++)
         {
+        
             if (SpawnStrength > 0)
             {
                 if (MaxTime < StartTime)

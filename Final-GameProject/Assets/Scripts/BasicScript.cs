@@ -31,6 +31,8 @@ public class BasicScript : MonoBehaviour
     public GameObject DefendPoint;
 
 
+    public bool isDefending;
+
     [SerializeField] int Limit;
     [SerializeField] int Level;
     /*private void Awake()
@@ -142,7 +144,6 @@ public class BasicScript : MonoBehaviour
         }
 
     }
-
     public void OnSecBtnPressed(InputAction.CallbackContext context)
     {
         if (Btn_Pressed_Counter == 1 && context.performed)
@@ -172,7 +173,6 @@ public class BasicScript : MonoBehaviour
         ResetStart();
         anim.SetTrigger("Attack3");
     }
-
     void ResetStart()
     {
         Btn_Pressed_Counter = 0;
@@ -232,7 +232,6 @@ public class BasicScript : MonoBehaviour
             this.gameObject.SetActive(false);
         }
     }
-
     public IEnumerator Dash()
     {
         isDashing = true;
@@ -247,7 +246,6 @@ public class BasicScript : MonoBehaviour
         yield return new WaitForSeconds(DashCD);
         canDash = true;
     }
-
     void Flip()
     {
         isFacingright = !isFacingright;
@@ -264,7 +262,6 @@ public class BasicScript : MonoBehaviour
         newpos.y = sd.position[1];
         transform.position = newpos;
     }
-
     public void AttackActivate()
     {
         AttackPoint.SetActive(true);
@@ -276,10 +273,12 @@ public class BasicScript : MonoBehaviour
     public void DefenceActivate()
     {
         DefendPoint.SetActive(true);
+        isDefending = true;
     }
     public void DefenceDeactivate()
     {
         DefendPoint.SetActive(false);
+        isDefending = true;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

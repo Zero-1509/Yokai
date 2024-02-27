@@ -11,7 +11,7 @@ public class AttackScript : MonoBehaviour
     public float ExpPoints;
     // Start is called before the first frame update
     void Start(){
-        ExpPoints = PlayerPrefs.GetFloat("Experience");
+        //ExpPoints = PlayerPrefs.GetFloat("Experience");
     }
 
     // Update is called once per frame

@@ -176,7 +176,7 @@ MonoBehaviour:
   m_YDamping: 1
   m_ZDamping: 1
   m_TargetMovementOnly: 1
-  m_ScreenX: 0.117
+  m_ScreenX: 0.236
   m_ScreenY: 0.599
   m_CameraDistance: 10
   m_DeadZoneWidth: 0.11
@@ -692,7 +692,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -27.492874, y: 1.6171198, z: -10}
+  m_LocalPosition: {x: -29.794306, y: 1.6171198, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -893,7 +893,7 @@ Transform:
   m_GameObject: {fileID: 695062034}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -27.492874, y: 1.6171198, z: -10}
+  m_LocalPosition: {x: -29.794306, y: 1.6171198, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6940,7 +6940,6 @@ GameObject:
   - component: {fileID: 1223355305}
   - component: {fileID: 1223355304}
   - component: {fileID: 1223355303}
-  - component: {fileID: 1223355307}
   m_Layer: 8
   m_Name: Static Sprite
   m_TagString: Ground
@@ -7005,7 +7004,7 @@ BoxCollider2D:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IsTrigger: 0
-  m_UsedByEffector: 1
+  m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
@@ -7081,31 +7080,12 @@ Transform:
   m_GameObject: {fileID: 1223355302}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 75.12072, y: 1.0168186, z: 1}
+  m_LocalPosition: {x: -0.9369, y: 0, z: 0}
+  m_LocalScale: {x: 76.99123, y: 1.0168186, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!251 &1223355307
-PlatformEffector2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1223355302}
-  m_Enabled: 1
-  m_UseColliderMask: 1
-  m_ColliderMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RotationalOffset: 0
-  m_UseOneWay: 1
-  m_UseOneWayGrouping: 0
-  m_SurfaceArc: 180
-  m_UseSideFriction: 0
-  m_UseSideBounce: 0
-  m_SideArc: 1
 --- !u!1 &1307660943
 GameObject:
   m_ObjectHideFlags: 0
@@ -7450,7 +7430,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1784205446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7465,8 +7445,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Camp: {fileID: 7089359117558096952, guid: 07d0981e5cd75a74e8e28069cc76e410, type: 3}
   Trap: {fileID: 5864966994290010014, guid: cd6f40b446bfc3349ad066472a61c5c9, type: 3}
-  TrapPoints: []
-  CampPoints: []
+  Trapp: {fileID: 0}
+  Enemy: {fileID: 0}
+  XPoint: 0
 --- !u!4 &1784205447
 Transform:
   m_ObjectHideFlags: 0
@@ -8046,6 +8027,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2103887916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2103887917}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2103887917
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2103887916}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.2, y: 0.57, z: 0.27061686}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3141147603463286263
 GameObject:
   m_ObjectHideFlags: 0
@@ -8162,7 +8174,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &8570378393137672020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8273,3 +8285,4 @@ SceneRoots:
   - {fileID: 695062035}
   - {fileID: 1784205447}
   - {fileID: 1973102172}
+  - {fileID: 2103887917}

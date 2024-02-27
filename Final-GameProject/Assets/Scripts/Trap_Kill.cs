@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Trap_Kill : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class Trap_Kill : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            Destroy(collision.gameObject);
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }

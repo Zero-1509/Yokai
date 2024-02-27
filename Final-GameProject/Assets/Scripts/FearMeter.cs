@@ -37,7 +37,14 @@ public class FearMeter : MonoBehaviour
         }
         if(My_Meter_Value >= Max_Value)
         {
-            Allies_Nearby.MyDamage = 40;
+            if (CompareTag("HebikawaR"))
+            {
+                Allies_Nearby.MyDamage = 20;
+            }
+            if (CompareTag("HebikawaL"))
+            {
+                Allies_Nearby.MyDamage = 10;
+            }
         }
     }
 }

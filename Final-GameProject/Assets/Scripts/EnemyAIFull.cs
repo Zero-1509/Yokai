@@ -71,8 +71,8 @@ public class EnemyAIFull : MonoBehaviour
         PlayerJumphit = Physics2D.Raycast(up.transform.position, transform.right, maxDist, PlayerMask);
         PlayerDownhit = Physics2D.Raycast(Down.transform.position, transform.right, maxDist, PlayerMask);
         back = Physics2D.Raycast(transform.position, -transform.right, maxDist / 2, PlayerMask);
-        cols = Physics2D.OverlapCircleAll(transform.position, 6f, EnemyMask);
-        Debug.DrawRay(transform.position, transform.right * maxDist, Color.green);
+        cols = Physics2D.OverlapCircleAll(transform.position, 15f, EnemyMask);
+        Debug.DrawRay(transform.position, transform.right * maxDist, Color.red);
 
         switch (EW)
         {

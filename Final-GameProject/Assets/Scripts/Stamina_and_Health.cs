@@ -36,7 +36,7 @@ public class Stamina_and_Health : MonoBehaviour
     void HealthManage()
     {
         var main = HealthUpdate.main;
-        if (Health > 99)
+        /*if (Health > 99)
         {
             main.prewarm = true;
             HealthUpdate.Stop();
@@ -62,7 +62,7 @@ public class Stamina_and_Health : MonoBehaviour
         if (Health <= 20)
         {
             main.simulationSpeed = 8.5f;
-        }
+        }*/
         if (Health <= 0)
         {
             RestartScene();

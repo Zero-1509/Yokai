@@ -20,7 +20,7 @@ public class ParticleScript : MonoBehaviour
 
     private void OnParticleCollision(GameObject col)
     {
-        Debug.Log("Hit Something!!");
+        //Debug.Log("Hit Something!!");
 
     }
 }

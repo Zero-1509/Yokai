@@ -26,7 +26,7 @@ public class FearMeter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        cols = Physics2D.OverlapCircleAll(transform.position, 6f, EnemyMask);
+        cols = Physics2D.OverlapCircleAll(transform.position, 15f, EnemyMask);
         
         Allies = cols.Length;
         AlliesPercent = Allies * 100 / 4;
@@ -39,11 +39,11 @@ public class FearMeter : MonoBehaviour
         {
             if (CompareTag("HebikawaR"))
             {
-                Allies_Nearby.MyDamage = 20;
+                //Allies_Nearby.MyDamage = 20;
             }
             if (CompareTag("HebikawaL"))
             {
-                Allies_Nearby.MyDamage = 10;
+                //Allies_Nearby.MyDamage = 10;
             }
         }
     }

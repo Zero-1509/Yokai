@@ -32,9 +32,12 @@ public class BasicScript : MonoBehaviour
 
 
     public bool isDefending;
+    bool TouchingWall;
 
     [SerializeField] int Limit;
     [SerializeField] int Level;
+
+    [SerializeField] int WallSpeed;
     /*private void Awake()
     {
         OnLoad();
@@ -91,8 +94,24 @@ public class BasicScript : MonoBehaviour
         {
             InMotion = false;
         }
+        
     }
-     public void OnDefend(InputAction.CallbackContext context)
+    public void WallClimb(InputAction.CallbackContext context)
+    {
+        if (TouchingWall)
+        {
+            if (context.started)
+            {
+                rb.velocity = transform.up * WallSpeed;
+            }
+            if (context.canceled)
+            {
+                rb.velocity = Vector2.zero;
+            }
+        }
+
+    }
+    public void OnDefend(InputAction.CallbackContext context)
     {
         if (context.duration > 0.02f)
         {
@@ -286,6 +305,25 @@ public class BasicScript : MonoBehaviour
         {
             canjump = true;
             rb.gravityScale = 3f;
+        }
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            TouchingWall = true;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            TouchingWall = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            TouchingWall = false;
         }
     }
 }

@@ -20,12 +20,12 @@ public class Camp_and_Trap : MonoBehaviour
     {
         Range_Trap = new Vector2[2];
         Range_Spawner_1 = new Vector2[3];
-        Range_Trap[0] = new Vector2(Random.Range(-25, -18), 0.5f);
-        Range_Trap[1] = new Vector2(Random.Range(5, 18), 0.5f);
+        Range_Trap[0] = new Vector2(Random.Range(-25, -18), -1.1f);
+        Range_Trap[1] = new Vector2(Random.Range(5, 18), -1.1f);
 
-        Range_Spawner_1[0] = new Vector2(Random.Range(-20, -14), 0.5f);
-        Range_Spawner_1[1] = new Vector2(Random.Range(2.3f, 10.2f), 0.5f);
-        Range_Spawner_1[2] = new Vector2(Random.Range(15, 22), 0.5f);
+        Range_Spawner_1[0] = new Vector2(Random.Range(-20, -14), -1.1f);
+        Range_Spawner_1[1] = new Vector2(Random.Range(2.3f, 10.2f), -1.1f);
+        Range_Spawner_1[2] = new Vector2(Random.Range(15, 22), -1.1f);
         for (int i = 0; i < 2; i++)
         {
             Trapp = Instantiate(Trap, Range_Trap[i], Quaternion.identity,transform.parent);
@@ -35,7 +35,6 @@ public class Camp_and_Trap : MonoBehaviour
             Enemy = Instantiate(Camp, Range_Spawner_1[i], Quaternion.identity,transform.parent);
         }
     }
-
     void Update()
     {
         

@@ -20,7 +20,10 @@ public class AttackScript : MonoBehaviour
         Collider2D col = Physics2D.OverlapCircle(transform.position,radius, DetectLayer);
 
         if (col){
-           col.GetComponent<Enemy_Stats>().HUpdates(10);
+           if(col.tag == "HebikawaL"||col.tag == "HebikawaR"||col.tag == "HebikawaH")
+                col.GetComponent<Enemy_Stats>().HUpdates(10);
+            else
+                col.GetComponent<TutorialKill>().health -= 1;
             /*float GotXP = Random.Range(30, 70);
             ExpPoints += GotXP;
             PlayerPrefs.SetFloat("Experience", ExpPoints);*/

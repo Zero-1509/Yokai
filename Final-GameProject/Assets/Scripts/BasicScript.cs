@@ -21,7 +21,7 @@ public class BasicScript : MonoBehaviour
 
 
     public bool canDash;
-    public bool isDashing;
+    public static bool isDashing;
     private float DashingTime = 0.3f;
     private float DashCD = 5f;
 
@@ -96,15 +96,46 @@ public class BasicScript : MonoBehaviour
         }
         
     }
+    bool GrabbingWall;
+    public void WallGrab(InputAction.CallbackContext context)
+    {
+        //GrabbingWall = context.ReadValue<float>() > 0.5f;
+        {
+            if (context.ReadValue<float>() > 0.5f)
+            {
+                GrabbingWall = true;
+            }
+            if (context.canceled)
+            {
+                GrabbingWall = false;
+            }
+            /* if (context.duration> 0.1f)
+             {
+                 GrabbingWall = true;
+             }
+             if (context.canceled)
+             {
+                 GrabbingWall = false;
+             }*/
+        }
+    }
     public void WallClimb(InputAction.CallbackContext context)
     {
+        /*if (GrabbingWall && context.ReadValue<float>() >= 0.5f)
+        {
+            rb.velocity = transform.up * WallSpeed;
+        }
+        else
+        {
+            rb.velocity = Vector2.zero;
+        }*/
         if (TouchingWall)
         {
-            if (context.started)
+            if (context.ReadValue<float>() > 0.5f && GrabbingWall)
             {
                 rb.velocity = transform.up * WallSpeed;
             }
-            if (context.canceled)
+            else
             {
                 rb.velocity = Vector2.zero;
             }
@@ -253,17 +284,14 @@ public class BasicScript : MonoBehaviour
     }
     public IEnumerator Dash()
     {
-        isDashing = true;
-        if (isDashing && canDash)
+        if (Stamina_and_Health.Stamina>27f)
         {
-            //Debug.Log("Dashing!!");
+            isDashing = true;
             rb.velocity = transform.right * -10;
+            Stamina_and_Health.Stamina -= 27;
             yield return new WaitForSeconds(DashingTime);
+            isDashing = false;
         }
-        canDash = false;
-        isDashing = false;
-        yield return new WaitForSeconds(DashCD);
-        canDash = true;
     }
     void Flip()
     {
@@ -309,6 +337,10 @@ public class BasicScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             TouchingWall = true;
+        }
+        if (collision.gameObject.CompareTag("DG"))
+        {
+            collision.gameObject.GetComponent<Animator>().enabled = true;
         }
     }
 

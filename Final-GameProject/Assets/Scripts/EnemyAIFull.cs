@@ -324,13 +324,13 @@ public class EnemyAIFull : MonoBehaviour
             {
                 EW = EnemyWorks.Detected;
             }
-            if (CompareTag("HebikawaL") || CompareTag("HebikawaR"))
+            /*if (CompareTag("HebikawaL") || CompareTag("HebikawaR"))
             {
                 if (cols.Length == 1)
                 {
                     EW = EnemyWorks.Flee;
                 }
-            }
+            }*/
         }
         
         if (back)

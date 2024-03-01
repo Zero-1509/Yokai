@@ -31,7 +31,7 @@ public class Restart : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("CP"))
         {
-            PlayerStartPos = transform.position;
+            PlayerStartPos = collision.transform.position;
         }
     }
 }

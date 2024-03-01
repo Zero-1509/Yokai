@@ -15,6 +15,9 @@ TagManager:
   - Bullet
   - Trap
   - RES
+  - CP
+  - Destroyable
+  - DG
   layers:
   - Default
   - TransparentFX
@@ -27,7 +30,7 @@ TagManager:
   - Ground
   - Enemy
   - Wall
-  - 
+  - Dest
   - 
   - 
   - 

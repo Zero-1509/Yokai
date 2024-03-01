@@ -93,6 +93,15 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "WalGrab",
+                    "type": "Button",
+                    "id": "880b34d9-c6fa-4983-819c-7e6e9f0b2d37",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
                     "initialStateCheck": false
                 }
             ],
@@ -220,6 +229,17 @@
                 },
                 {
                     "name": "",
+                    "id": "8ceae037-7ce9-4c37-946c-e781aeffe2ce",
+                    "path": "<Keyboard>/k",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard,Mouse",
+                    "action": "Attack 1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8b1b8b7e-21f9-42f5-ae4e-02bc4131c0fd",
                     "path": "<Keyboard>/leftShift",
                     "interactions": "Hold",
@@ -287,7 +307,7 @@
                 {
                     "name": "",
                     "id": "375ef4d0-9b96-4dbd-897f-1f2fe0512ad6",
-                    "path": "<Keyboard>/leftCtrl",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard,Mouse",
@@ -374,33 +394,22 @@
                 },
                 {
                     "name": "",
-                    "id": "c258e94f-3b0e-40e3-9c6f-ccd3990863ce",
-                    "path": "<Keyboard>/leftShift",
+                    "id": "0f6c3017-ea20-45c3-838d-a5cc199458ea",
+                    "path": "<Keyboard>/leftCtrl",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard,Mouse",
-                    "action": "WallClimb",
+                    "groups": "",
+                    "action": "WalGrab",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "2D Vector",
-                    "id": "1b1b6a35-6798-4d4d-be46-e72a7a3cd016",
-                    "path": "2DVector",
+                    "name": "",
+                    "id": "9c8aa032-7a9c-460d-8093-ac573b594f2b",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "WallClimb",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c9c57604-33ea-4dd5-8c91-61c3e3d535b9",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "Hold",
-                    "processors": "",
-                    "groups": "Controller",
                     "action": "WallClimb",
                     "isComposite": false,
                     "isPartOfComposite": false

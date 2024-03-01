@@ -6,26 +6,26 @@ using UnityEngine.SceneManagement;
 
 public class Stamina_and_Health : MonoBehaviour
 {
-    public float Stamina;
+    public static float Stamina;
     public float Health;
-    public Volume vol;
-   
-
-    public float MaxRunningTime = 10;
-    public float MinRunningTime = 0;
-
+    public float ShowStamina;
 
     public ParticleSystem HealthUpdate;
     // Start is called before the first frame update
     void Start()
     {
         ParticleSystem.MainModule mainModule = HealthUpdate.main;
+        Stamina = 100;
     }
 
     // Update is called once per frame
     void Update()
     {
         HealthManage();
+        Stamina = Mathf.Clamp(Stamina, 0, 100);
+        ShowStamina = Stamina;
+        if (!BasicScript.isDashing)
+            Stamina += Time.deltaTime;
     }
 
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class BasicScript : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class BasicScript : MonoBehaviour
 
 
     public bool canDash;
-    public bool isDashing;
+    public static bool isDashing;
     private float DashingTime = 0.3f;
     private float DashCD = 5f;
 
@@ -30,8 +31,13 @@ public class BasicScript : MonoBehaviour
     public GameObject DefendPoint;
 
 
+    public bool isDefending;
+    bool TouchingWall;
+
     [SerializeField] int Limit;
     [SerializeField] int Level;
+
+    [SerializeField] int WallSpeed;
     /*private void Awake()
     {
         OnLoad();
@@ -88,8 +94,55 @@ public class BasicScript : MonoBehaviour
         {
             InMotion = false;
         }
+        
     }
-     public void OnDefend(InputAction.CallbackContext context)
+    bool GrabbingWall;
+    public void WallGrab(InputAction.CallbackContext context)
+    {
+        //GrabbingWall = context.ReadValue<float>() > 0.5f;
+        {
+            if (context.ReadValue<float>() > 0.5f)
+            {
+                GrabbingWall = true;
+            }
+            if (context.canceled)
+            {
+                GrabbingWall = false;
+            }
+            /* if (context.duration> 0.1f)
+             {
+                 GrabbingWall = true;
+             }
+             if (context.canceled)
+             {
+                 GrabbingWall = false;
+             }*/
+        }
+    }
+    public void WallClimb(InputAction.CallbackContext context)
+    {
+        /*if (GrabbingWall && context.ReadValue<float>() >= 0.5f)
+        {
+            rb.velocity = transform.up * WallSpeed;
+        }
+        else
+        {
+            rb.velocity = Vector2.zero;
+        }*/
+        if (TouchingWall)
+        {
+            if (context.ReadValue<float>() > 0.5f && GrabbingWall)
+            {
+                rb.velocity = transform.up * WallSpeed;
+            }
+            else
+            {
+                rb.velocity = Vector2.zero;
+            }
+        }
+
+    }
+    public void OnDefend(InputAction.CallbackContext context)
     {
         if (context.duration > 0.02f)
         {
@@ -141,7 +194,6 @@ public class BasicScript : MonoBehaviour
         }
 
     }
-
     public void OnSecBtnPressed(InputAction.CallbackContext context)
     {
         if (Btn_Pressed_Counter == 1 && context.performed)
@@ -171,7 +223,6 @@ public class BasicScript : MonoBehaviour
         ResetStart();
         anim.SetTrigger("Attack3");
     }
-
     void ResetStart()
     {
         Btn_Pressed_Counter = 0;
@@ -231,26 +282,17 @@ public class BasicScript : MonoBehaviour
             this.gameObject.SetActive(false);
         }
     }
-
     public IEnumerator Dash()
     {
-
-        isDashing = true;
-        if (isDashing && canDash)
+        if (Stamina_and_Health.Stamina>27f)
         {
-            //Debug.Log("Dashing!!");
+            isDashing = true;
             rb.velocity = transform.right * -10;
+            Stamina_and_Health.Stamina -= 27;
             yield return new WaitForSeconds(DashingTime);
+            isDashing = false;
         }
-        canDash = false;
-        isDashing = false;
-        yield return new WaitForSeconds(DashCD);
-        canDash = true;
     }
-
-
-
-
     void Flip()
     {
         isFacingright = !isFacingright;
@@ -267,8 +309,6 @@ public class BasicScript : MonoBehaviour
         newpos.y = sd.position[1];
         transform.position = newpos;
     }
-
-
     public void AttackActivate()
     {
         AttackPoint.SetActive(true);
@@ -280,10 +320,12 @@ public class BasicScript : MonoBehaviour
     public void DefenceActivate()
     {
         DefendPoint.SetActive(true);
+        isDefending = true;
     }
     public void DefenceDeactivate()
     {
         DefendPoint.SetActive(false);
+        isDefending = true;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -291,6 +333,29 @@ public class BasicScript : MonoBehaviour
         {
             canjump = true;
             rb.gravityScale = 3f;
+        }
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            TouchingWall = true;
+        }
+        if (collision.gameObject.CompareTag("DG"))
+        {
+            collision.gameObject.GetComponent<Animator>().enabled = true;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            TouchingWall = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            TouchingWall = false;
         }
     }
 }

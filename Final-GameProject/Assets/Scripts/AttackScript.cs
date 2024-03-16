@@ -21,9 +21,15 @@ public class AttackScript : MonoBehaviour
 
         if (col){
            if(col.tag == "HebikawaL"||col.tag == "HebikawaR"||col.tag == "HebikawaH")
+            {
                 col.GetComponent<Enemy_Stats>().HUpdates(10);
+                this.gameObject.SetActive(false);
+            }
             else
+            {
                 col.GetComponent<TutorialKill>().health -= 1;
+                this.gameObject.SetActive(false);
+            }
             /*float GotXP = Random.Range(30, 70);
             ExpPoints += GotXP;
             PlayerPrefs.SetFloat("Experience", ExpPoints);*/

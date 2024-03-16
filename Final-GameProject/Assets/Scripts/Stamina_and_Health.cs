@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Stamina_and_Health : MonoBehaviour
 {
@@ -10,11 +11,11 @@ public class Stamina_and_Health : MonoBehaviour
     public float Health;
     public float ShowStamina;
 
-    public ParticleSystem HealthUpdate;
+    public Slider HealthSlider;
+    public Slider StaminaSlider;
     // Start is called before the first frame update
     void Start()
     {
-        ParticleSystem.MainModule mainModule = HealthUpdate.main;
         Stamina = 100;
     }
 
@@ -23,9 +24,13 @@ public class Stamina_and_Health : MonoBehaviour
     {
         HealthManage();
         Stamina = Mathf.Clamp(Stamina, 0, 100);
+        StaminaSlider.value = Stamina;
         ShowStamina = Stamina;
         if (!BasicScript.isDashing)
+        {
             Stamina += Time.deltaTime;
+            StaminaSlider.value = Stamina;
+        }
     }
 
 
@@ -35,34 +40,6 @@ public class Stamina_and_Health : MonoBehaviour
     }
     void HealthManage()
     {
-        var main = HealthUpdate.main;
-        /*if (Health > 99)
-        {
-            main.prewarm = true;
-            HealthUpdate.Stop();
-        }
-        if (Health <= 99)
-        {
-            HealthUpdate.Play();
-            main.prewarm = false;
-            
-        }
-        if (Health <= 80)
-        {
-            main.simulationSpeed = 2.3f;
-        }
-        if (Health <= 60)
-        {
-            main.simulationSpeed = 4.7f;
-        }
-        if (Health <= 40)
-        {
-            main.simulationSpeed = 6f;
-        }
-        if (Health <= 20)
-        {
-            main.simulationSpeed = 8.5f;
-        }*/
         if (Health <= 0)
         {
             RestartScene();

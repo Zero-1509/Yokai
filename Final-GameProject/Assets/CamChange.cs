@@ -19,7 +19,7 @@ public class CamChange : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("EditorOnly"))
+        if (collision.CompareTag("Cam"))
         {
             Confiner.m_BoundingShape2D = collision;
         }

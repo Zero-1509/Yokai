@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
 {
-    public GameObject TargetObj;
+    float StartY;
     // Start is called before the first frame update
-    Vector3 offset;
     void Start()
     {
-        offset = transform.position - TargetObj.transform.position;
+        StartY = gameObject.transform.position.y;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(BasicScript.InMotion)
-            transform.position =new Vector2(transform.position.x+offset.x*Time.deltaTime,transform.position.y);
+        transform.position = new Vector2(transform.position.x, StartY);
     }
 }

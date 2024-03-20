@@ -121,12 +121,13 @@ public class EnemyAIFull : MonoBehaviour
         yield return new WaitForSeconds(1f);
         EW = EnemyWorks.Patrol;
     }
+    public int PatrolRange = 0;
     void Patrol()
     {
         if (!Playerhit && !PlayerJumphit && !PlayerDownhit)
         {
             transform.position += new Vector3(movespeed * MoveDir * Time.deltaTime, 0);
-            if (transform.position.x >= StartPos.x + 3 || transform.position.x <= StartPos.x - 3)
+            if (transform.position.x >= StartPos.x + PatrolRange || transform.position.x <= StartPos.x - PatrolRange)
             {
                 if (!isFlipped)
                 {
@@ -324,13 +325,7 @@ public class EnemyAIFull : MonoBehaviour
             {
                 EW = EnemyWorks.Detected;
             }
-            /*if (CompareTag("HebikawaL") || CompareTag("HebikawaR"))
-            {
-                if (cols.Length == 1)
-                {
-                    EW = EnemyWorks.Flee;
-                }
-            }*/
+            
         }
         
         if (back)

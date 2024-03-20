@@ -18,6 +18,7 @@ TagManager:
   - CP
   - Destroyable
   - DG
+  - Cam
   layers:
   - Default
   - TransparentFX

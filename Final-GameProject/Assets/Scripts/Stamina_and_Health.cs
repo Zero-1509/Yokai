@@ -28,7 +28,7 @@ public class Stamina_and_Health : MonoBehaviour
         ShowStamina = Stamina;
         if (!BasicScript.isDashing)
         {
-            Stamina += Time.deltaTime;
+            Stamina += Time.deltaTime*5;
             StaminaSlider.value = Stamina;
         }
     }

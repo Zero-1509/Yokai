@@ -15,9 +15,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Attack",
+                    "name": "Attack 1",
                     "type": "Button",
                     "id": "9398c42e-cb1a-4c26-af7d-6b1052fb3921",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Attack 2",
+                    "type": "Button",
+                    "id": "3f6ed47e-ee0b-4a85-8897-e181ac8ebec8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -54,6 +63,42 @@
                     "name": "Dash",
                     "type": "Button",
                     "id": "60cb6808-98be-41ed-ade4-30281dccd51f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Defend",
+                    "type": "Button",
+                    "id": "3102cd15-ab54-4fb0-ac56-c3b010e15426",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Hold",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Hide",
+                    "type": "Button",
+                    "id": "4da6ff81-e6de-4211-b0f8-4296405aa9c1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "WallClimb",
+                    "type": "Button",
+                    "id": "21d0afc0-b014-467c-b52e-f74258146d77",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "WalGrab",
+                    "type": "Button",
+                    "id": "880b34d9-c6fa-4983-819c-7e6e9f0b2d37",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -128,13 +173,46 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "2D Vector",
+                    "id": "7b369c6e-0a61-4296-91e6-2c6759392ad3",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "left",
+                    "id": "474d77c6-b306-45b4-adf3-1fae5831bf3b",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "64a64143-9f06-4779-af2b-15a8e2e95330",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "fcf29c49-0c2a-42af-84e3-e02f11ab9898",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard,Mouse",
-                    "action": "Attack",
+                    "action": "Attack 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -145,7 +223,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Controller",
-                    "action": "Attack",
+                    "action": "Attack 1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8ceae037-7ce9-4c37-946c-e781aeffe2ce",
+                    "path": "<Keyboard>/k",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard,Mouse",
+                    "action": "Attack 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -218,7 +307,7 @@
                 {
                     "name": "",
                     "id": "375ef4d0-9b96-4dbd-897f-1f2fe0512ad6",
-                    "path": "<Keyboard>/leftCtrl",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard,Mouse",
@@ -234,6 +323,94 @@
                     "processors": "",
                     "groups": "Controller",
                     "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3a5269c4-fe3a-4f27-8632-30bb291c6498",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard,Mouse",
+                    "action": "Attack 2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0ae83bd9-4e72-4963-b936-31cefbc47508",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Attack 2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "98235b2c-943c-4646-8e89-1e120cc461e1",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Defend",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f04b02f1-9c0f-4ca1-903c-911e50082e78",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard,Mouse",
+                    "action": "Defend",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f2e1240f-036d-4dd7-b96a-31af47677a89",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Hide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "105907f8-1aa1-4319-ad87-e95a11acd53c",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard,Mouse",
+                    "action": "Hide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0f6c3017-ea20-45c3-838d-a5cc199458ea",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WalGrab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9c8aa032-7a9c-460d-8093-ac573b594f2b",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WallClimb",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

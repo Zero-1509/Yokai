@@ -7,41 +7,41 @@ using UnityEngine.SceneManagement;
 public class BasicScript : MonoBehaviour
 {
 
-    public Transform GroundObj; //GroundCheck
     public float speed = 4f;    //Player Speed
     Vector2 moveVector;         //Input Vector
-    public Animator anim;       //Animation
-    bool isholding;             //SpecialAttack P1
-    Rigidbody2D rb;             //Movement Rigidbody
-    [SerializeField] float JumpForce = 7f;  //Jump Power
     bool isFacingright;         //Facing
-    bool canjump;
-    public bool canDash;
-    public static bool isDashing;
-    public float DashingTime = 0.1f;
-    public float DashingPower;
-    public static bool InMotion;
-    public bool isDefending;
-    bool TouchingWall;
-    [SerializeField] int WallSpeed;
-    [SerializeField] float GroundCheckRadius;
-    [SerializeField] LayerMask GroundCheckMask;
+    public Animator anim;       //Animation
+    Rigidbody2D rb;             //Physics Rigidbody
+    
+    public Transform GroundObj;             //GroundDetect Pos
+    bool canjump;                           //Jump Count
+    [SerializeField] float JumpForce = 7f;  //Jump Power
+    
+    public bool canDash;                        //DashRestrict
+    public static bool isDashing;               //Checking Dash
+    public float DashingTime = 0.1f;            //Time for which Dash is activated
+    public float DashingPower;                  //Power for Dash
+    public static bool InMotion;                //Check if character in motion
+    bool TouchingWall;                          //Check if Touching the wall
+    bool GrabbingWall;                          //Check if Player is grabbing wall 
+    [SerializeField] int WallSpeed;             //Speed of going up
+    [SerializeField] float GroundCheckRadius;   //Radius for checking ground dis
+    [SerializeField] LayerMask GroundCheckMask; //Layer of ground
     
 
-    int Btn_Pressed_Counter;
-    int Sec_Combo_BtnPressed;
-    public GameObject AttackPoint;
-    public GameObject DefendPoint;
+    bool isholding;                 //SpecialAttack P1
+    public bool isDefending;        //Check if character is defending (Not in game for now)
+    int Btn_Pressed_Counter;        //Combo Count Check;
+    int Sec_Combo_BtnPressed;       //Second Combo Check
+    public GameObject AttackPoint;  //For activating & deactivating Attack after 1 use
+    public GameObject DefendPoint;  //For activating & deactivating Defence Point
 
 
+    Vector2 newpos; // SaveVector
 
     [SerializeField] int Limit;
     [SerializeField] int Level;
 
-    
-
-    // Start is called before the first frame update
-    Vector2 newpos; // SaveVector
     void Start()
     {
         Level = PlayerPrefs.GetInt("Levels");
@@ -52,9 +52,11 @@ public class BasicScript : MonoBehaviour
         AttackPoint.SetActive(false);
         DefendPoint.SetActive(false);
     }
+    
+
+    // Start is called before the first frame update
 
     #region Movement
-        bool GrabbingWall;
         private void Update(){
             Collider2D GroundDetect = Physics2D.OverlapCircle(GroundObj.position, GroundCheckRadius, GroundCheckMask);
             if (GroundDetect)

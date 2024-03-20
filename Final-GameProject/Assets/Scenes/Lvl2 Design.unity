@@ -189,7 +189,7 @@ Transform:
   m_GameObject: {fileID: 10797180}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.1213803, y: -1.5477225, z: -10}
+  m_LocalPosition: {x: -2.123372, y: -1.5477225, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4277,7 +4277,7 @@ Transform:
   m_GameObject: {fileID: 659133681}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 40.699116, y: 4.014886, z: 0}
+  m_LocalPosition: {x: 37.5, y: 4.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7796,7 +7796,7 @@ Transform:
   m_GameObject: {fileID: 884022109}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.122998, y: -1.46187, z: -10}
+  m_LocalPosition: {x: -2.1249804, y: -1.46188, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15151,19 +15151,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   anim: {fileID: 0}
+  GroundObj: {fileID: 0}
   JumpForce: 270
   canDash: 0
-  AttackPoint: {fileID: 350149557}
-  DefendPoint: {fileID: 1798152016}
-  isDefending: 0
-  Limit: 0
-  Level: 0
+  DashingTime: 0.1
+  DashingPower: 17
   WallSpeed: 2
   GroundCheckRadius: 0.8
   GroundCheckMask:
     serializedVersion: 2
     m_Bits: 256
-  DashingPower: 17
+  isDefending: 0
+  AttackPoint: {fileID: 350149557}
+  DefendPoint: {fileID: 1798152016}
+  Limit: 0
+  Level: 0
 --- !u!50 &1767142996
 Rigidbody2D:
   serializedVersion: 4
@@ -15481,7 +15483,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 100
   ShowStamina: 0
-  HealthUpdate: {fileID: 0}
+  HealthSlider: {fileID: 0}
+  StaminaSlider: {fileID: 0}
 --- !u!1 &1798152016
 GameObject:
   m_ObjectHideFlags: 0

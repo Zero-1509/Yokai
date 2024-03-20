@@ -6,7 +6,7 @@ using UnityEngine;
 public class AttackScript : MonoBehaviour
 {
     public LayerMask DetectLayer;
-    [SerializeField] Vector2 radius;
+    [SerializeField] float radius;
 
     public float ExpPoints;
     // Start is called before the first frame update
@@ -17,7 +17,7 @@ public class AttackScript : MonoBehaviour
     // Update is called once per frame
     void Update(){
 
-        Collider2D col = Physics2D.OverlapCapsule(transform.position, radius, CapsuleDirection2D.Vertical, 22.78f,DetectLayer);
+        Collider2D col = Physics2D.OverlapCircle(transform.position, radius,DetectLayer);
         if (col){
            if(col.tag == "HebikawaL"||col.tag == "HebikawaR"||col.tag == "HebikawaH")
             {

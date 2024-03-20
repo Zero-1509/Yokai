@@ -15,19 +15,19 @@ public class Enemy_Stats : MonoBehaviour
         {
             Health = Random.Range(10, 25);
             AttackPower = Random.Range(5, 14);
-            MoveSpeed = Random.Range(2, 4);
+            MoveSpeed = Random.Range(0.7f, 1.9f);
         }
         if (CompareTag("HebikawaR"))
         {
             Health = Random.Range(15, 30);
             AttackPower = Random.Range(3, 10);
-            MoveSpeed = Random.Range(2, 4);
+            MoveSpeed = Random.Range(0.7f, 1.9f);
         }
         if (CompareTag("HebikawaH"))
         {
             Health = Random.Range(25, 40);
             AttackPower = Random.Range(10, 18);
-            MoveSpeed = Random.Range(0.8f, 1.3f);
+            MoveSpeed = Random.Range(0.3f, 1f);
         }
         Strength = (Health + AttackPower)/2;
     }

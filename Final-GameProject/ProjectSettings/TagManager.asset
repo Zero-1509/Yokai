@@ -19,6 +19,8 @@ TagManager:
   - Destroyable
   - DG
   - Cam
+  - OneWay
+  - Boss
   layers:
   - Default
   - TransparentFX

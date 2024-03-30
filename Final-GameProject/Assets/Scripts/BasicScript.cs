@@ -14,7 +14,7 @@ public class BasicScript : MonoBehaviour
     Rigidbody2D rb;             //Physics Rigidbody
     
     public Transform GroundObj;             //GroundDetect Pos
-    bool canjump;                           //Jump Count
+    public bool canjump;                    //Jump Count
     [SerializeField] float JumpForce = 7f;  //Jump Power
     
     public bool canDash;                        //DashRestrict
@@ -27,7 +27,8 @@ public class BasicScript : MonoBehaviour
     [SerializeField] int WallSpeed;             //Speed of going up
     [SerializeField] float GroundCheckRadius;   //Radius for checking ground dis
     [SerializeField] LayerMask GroundCheckMask; //Layer of ground
-    
+
+    public bool IsTouchingGround;
 
     bool isholding;                 //SpecialAttack P1
     public bool isDefending;        //Check if character is defending (Not in game for now)
@@ -35,10 +36,12 @@ public class BasicScript : MonoBehaviour
     int Sec_Combo_BtnPressed;       //Second Combo Check
     public GameObject AttackPoint;  //For activating & deactivating Attack after 1 use
     public GameObject DefendPoint;  //For activating & deactivating Defence Point
+    bool DownButtonPressed;
+    bool FallDown;
 
+    Vector2 newpos;                 // SaveVector
 
-    Vector2 newpos; // SaveVector
-
+    public GameObject Inv;
     [SerializeField] int Limit;
     [SerializeField] int Level;
 
@@ -52,13 +55,13 @@ public class BasicScript : MonoBehaviour
         AttackPoint.SetActive(false);
         DefendPoint.SetActive(false);
     }
-    
 
     // Start is called before the first frame update
 
     #region Movement
         private void Update(){
-            Collider2D GroundDetect = Physics2D.OverlapCircle(GroundObj.position, GroundCheckRadius, GroundCheckMask);
+            RaycastHit2D GroundDetect = Physics2D.Raycast(GroundObj.position, -transform.up,GroundCheckRadius, GroundCheckMask);
+            Debug.DrawRay(GroundObj.position, -transform.up* GroundCheckRadius,Color.blue);
             if (GroundDetect)
             {
                 canjump = true;
@@ -80,7 +83,7 @@ public class BasicScript : MonoBehaviour
         }
         public void WallGrab(InputAction.CallbackContext context)
         {
-            if (context.ReadValue<float>() > 0.5f)
+            if (context.started)
             {
                 GrabbingWall = true;
             }
@@ -138,9 +141,13 @@ public class BasicScript : MonoBehaviour
         }
         public void OnJump(InputAction.CallbackContext context)
         {
-            if (context.performed && canjump)
+            if (context.performed && canjump && !DownButtonPressed)
             {
                 Jump();
+            }
+            if(context.performed && DownButtonPressed)
+            {
+                FallDown = true;
             }
         }
         public void OnDash(InputAction.CallbackContext context)
@@ -173,6 +180,30 @@ public class BasicScript : MonoBehaviour
             yield return new WaitForSeconds(DashingTime);
             isDashing = false;
         }
+
+        public void  DownFall(InputAction.CallbackContext context)
+        {
+            if (context.ReadValue<float>()>0.5f)
+            {
+                DownButtonPressed = true;        
+            }
+            if (context.canceled)
+            {
+                DownButtonPressed = false;
+            }
+        }
+
+        public void Inventory(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+        if (Inv.active)
+            Inv.SetActive(false);
+        else
+            Inv.SetActive(true);
+
+        }
+    }
 
     #endregion
 
@@ -326,11 +357,40 @@ public class BasicScript : MonoBehaviour
             collision.gameObject.GetComponent<Animator>().enabled = true;
         }
     }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("OneWay"))
+        {
+            collision.gameObject.GetComponent<PlatformEffector2D>().rotationalOffset = 0;
+            FallDown = false;
+        }
+
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            IsTouchingGround = false;
+        }
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (FallDown && collision.gameObject.CompareTag("OneWay"))
+        {
+            collision.gameObject.GetComponent<PlatformEffector2D>().rotationalOffset = 180;
+        }
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            IsTouchingGround = true;
+        }
+    }
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
             TouchingWall = true;
+
+            if (GrabbingWall)
+            {
+                rb.gravityScale = 0;
+            }
         }
     }
     private void OnTriggerExit2D(Collider2D collision)

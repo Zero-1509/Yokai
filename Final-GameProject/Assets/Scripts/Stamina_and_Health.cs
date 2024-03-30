@@ -11,6 +11,8 @@ public class Stamina_and_Health : MonoBehaviour
     public float Health;
     public float ShowStamina;
 
+    [SerializeField] float StaminaRegenSpeed = 5;
+
     public Slider HealthSlider;
     public Slider StaminaSlider;
     // Start is called before the first frame update
@@ -25,12 +27,36 @@ public class Stamina_and_Health : MonoBehaviour
         HealthManage();
         Stamina = Mathf.Clamp(Stamina, 0, 100);
         StaminaSlider.value = Stamina;
+        Health = Mathf.Clamp(Health, 0, 100);
+        HealthSlider.value = Health;
         ShowStamina = Stamina;
         if (!BasicScript.isDashing)
         {
-            Stamina += Time.deltaTime*5;
+            Stamina += Time.deltaTime*StaminaRegenSpeed;
             StaminaSlider.value = Stamina;
         }
+        if (StaminaRegenSpeed > 5)
+        {
+            if (ResetTime > 0)
+            {
+                ResetTime -= Time.deltaTime;
+            }
+            else
+            {
+                ResetTime = 5;
+                StaminaRegenSpeed = 5f;
+            }
+        }
+    }
+    float ResetTime = 5f;
+    public void StaminaBoost()
+    {
+        StaminaRegenSpeed = 12;
+    }
+    public void HealthUP()
+    {
+        Health += 30;
+        HealthSlider.value = Health;
     }
 
 

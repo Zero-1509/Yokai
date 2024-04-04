@@ -194,16 +194,16 @@ public class BasicScript : MonoBehaviour
         }
 
         public void Inventory(InputAction.CallbackContext context)
-    {
-        if (context.performed)
         {
-        if (Inv.active)
-            Inv.SetActive(false);
-        else
-            Inv.SetActive(true);
+            if (context.performed)
+            {
+            if (Inv.active)
+                Inv.SetActive(false);
+            else
+                Inv.SetActive(true);
 
+            }
         }
-    }
 
     #endregion
 

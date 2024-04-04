@@ -21,6 +21,7 @@ TagManager:
   - Cam
   - OneWay
   - Boss
+  - BossWeapon
   layers:
   - Default
   - TransparentFX
@@ -34,8 +35,8 @@ TagManager:
   - Enemy
   - Wall
   - Dest
-  - 
-  - 
+  - FinalBoss
+  - BossWeapon
   - 
   - 
   - 

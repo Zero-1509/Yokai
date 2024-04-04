@@ -11,13 +11,14 @@ public class Bullet : MonoBehaviour
     {
         bulletDamage = 12;
         rb = GetComponent<Rigidbody2D>();
+        rb.velocity = transform.right * 250f * Time.deltaTime;
     }
 
     // Update is called once per frame
     void Update()
     {
-        rb.velocity= -transform.right*250f*Time.deltaTime;
-
+        float rotZ = Mathf.Atan2(rb.velocity.y,rb.velocity.x)*Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(rotZ, Vector3.forward);
         Destroy(gameObject, 5f);
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -27,7 +28,6 @@ public class Bullet : MonoBehaviour
             Debug.Log("Hit "+ collision.collider.gameObject);
             collision.gameObject.GetComponent<Stamina_and_Health>().Health -= bulletDamage;
             Destroy(gameObject);
-            
         }
     }
 }

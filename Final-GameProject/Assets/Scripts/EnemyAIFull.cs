@@ -14,13 +14,13 @@ public enum EnemyWorks
 }
 public class EnemyAIFull : MonoBehaviour
 {
+    public static EnemyAIFull Instance;
+
     public float movespeed;
     public int JS;
     public int maxDist = 10;
     [SerializeField] int MoveDir = 1;
     public RaycastHit2D Playerhit;
-    public RaycastHit2D PlayerJumphit;
-    public RaycastHit2D PlayerDownhit;
     RaycastHit2D Otherhit;
     Rigidbody2D rb;
     public EnemyWorks EW;
@@ -31,9 +31,6 @@ public class EnemyAIFull : MonoBehaviour
     public LayerMask OtherMask;
     public LayerMask EnemyMask;
 
-    public GameObject up;
-    public GameObject Down;
-
     public GameObject bullet;
     bool onceFlip = true;
     public Collider2D[] cols;
@@ -43,9 +40,15 @@ public class EnemyAIFull : MonoBehaviour
 
     public float MyDamage;
 
+    public Transform BoxStartPos;
+    public Vector2 BoxCastSize;
+
+    public Transform ShootPoint;
     // Start is called before the first frame update
     void Start()
     {
+        Instance = this;
+
         StartPos = transform.position;
         InAir = false;
         rb = GetComponent<Rigidbody2D>();
@@ -67,12 +70,9 @@ public class EnemyAIFull : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Playerhit = Physics2D.Raycast(transform.position, transform.right, maxDist, PlayerMask);
-        PlayerJumphit = Physics2D.Raycast(up.transform.position, transform.right, maxDist, PlayerMask);
-        PlayerDownhit = Physics2D.Raycast(Down.transform.position, transform.right, maxDist, PlayerMask);
-        back = Physics2D.Raycast(transform.position, -transform.right, maxDist / 2, PlayerMask);
+        Playerhit = Physics2D.BoxCast(BoxStartPos.position, BoxCastSize, 0, transform.right * MoveDir,maxDist,PlayerMask);
+        back = Physics2D.Raycast(transform.position, -transform.right, BoxCastSize.x / 2, PlayerMask);
         cols = Physics2D.OverlapCircleAll(transform.position, 15f, EnemyMask);
-        Debug.DrawRay(transform.position, transform.right * maxDist, Color.red);
 
         switch (EW)
         {
@@ -105,7 +105,7 @@ public class EnemyAIFull : MonoBehaviour
     #region States
     void Idle()
     {
-        if (!Playerhit && !PlayerJumphit && !PlayerDownhit)
+        if (!Playerhit)
         {
             rb.velocity = Vector2.zero;
             StartCoroutine(Delay());
@@ -124,7 +124,7 @@ public class EnemyAIFull : MonoBehaviour
     public int PatrolRange = 0;
     void Patrol()
     {
-        if (!Playerhit && !PlayerJumphit && !PlayerDownhit)
+        if (!Playerhit)
         {
             transform.position += new Vector3(movespeed * MoveDir * Time.deltaTime, 0);
             if (transform.position.x >= StartPos.x + PatrolRange || transform.position.x <= StartPos.x - PatrolRange)
@@ -147,24 +147,23 @@ public class EnemyAIFull : MonoBehaviour
                 if (cols[i].GetComponent<EnemyAIFull>().EW == EnemyWorks.Detected)
                 {
                     maxDist = 20;
-                    if (Playerhit || PlayerJumphit || PlayerDownhit)
+                    if (Playerhit)
                         EW = EnemyWorks.Detected;
-
                 }
             }
         }
 
-        if (Playerhit || PlayerJumphit || PlayerDownhit)
+        if (Playerhit)
         {
             EW = EnemyWorks.Detected;
         }
     }
     void Follow()
     {
-        if (Playerhit || PlayerJumphit || PlayerDownhit)
+        if (Playerhit)
         {
             transform.position += new Vector3(movespeed * 1.5f * MoveDir * Time.deltaTime, 0);
-            if (Playerhit.distance <= MinDis)
+            if (Vector2.Distance(Playerhit.point,transform.position) <= MinDis)
             {
                 EW = EnemyWorks.Attack;
             }
@@ -174,7 +173,7 @@ public class EnemyAIFull : MonoBehaviour
             EW = EnemyWorks.Patrol;
         }
 
-        Otherhit = Physics2D.Raycast(transform.position, transform.right, maxDist / 2, OtherMask);
+        Otherhit = Physics2D.Raycast(transform.position, transform.right, BoxCastSize.x / 2, OtherMask);
         if (Otherhit)
         {
             if (Otherhit.distance <= 1.7f)
@@ -194,7 +193,7 @@ public class EnemyAIFull : MonoBehaviour
         }
         else
         {
-            if (Playerhit || PlayerJumphit || PlayerDownhit)
+            if (Playerhit)
             {
                 EW = EnemyWorks.Detected;
             }
@@ -216,7 +215,7 @@ public class EnemyAIFull : MonoBehaviour
             rb.velocity = new Vector2(MoveDir * speeed, rb.velocity.y);
         else
         {
-            if (Playerhit || PlayerJumphit || PlayerDownhit)
+            if (Playerhit)
             {
                 EW = EnemyWorks.Detected;
             }
@@ -234,7 +233,7 @@ public class EnemyAIFull : MonoBehaviour
             onceFlip = false;
         }
         transform.position += new Vector3(MoveDir * movespeed * Time.deltaTime, 0);
-        Otherhit = Physics2D.Raycast(transform.position, transform.right, maxDist / 2, OtherMask);
+        Otherhit = Physics2D.Raycast(transform.position, transform.right, BoxCastSize.x / 2, OtherMask);
         if (Otherhit)
         {
             if (Otherhit.distance <= 1.7f)
@@ -273,8 +272,8 @@ public class EnemyAIFull : MonoBehaviour
                 StartTime += Time.deltaTime;
                 if (Shot)
                 {
-                    if(Playerhit.distance <=MinDis-1)
-                        transform.position -= transform.right * movespeed * Time.deltaTime;
+                    if(Vector2.Distance(Playerhit.point,transform.position) <=MinDis-1)
+                        transform.position -= transform.right * MoveDir * movespeed * Time.deltaTime;
                     else
                     {
                         Shot = false;
@@ -283,7 +282,7 @@ public class EnemyAIFull : MonoBehaviour
             }
             else
             {
-                Instantiate(bullet, transform.position + transform.right, Quaternion.identity);
+                Instantiate(bullet, ShootPoint.position, ShootPoint.rotation);
                 Shot = true;
                 StartTime = 0;
             }
@@ -315,9 +314,9 @@ public class EnemyAIFull : MonoBehaviour
     }
     void Attack()
     {
-        if (Playerhit || PlayerJumphit || PlayerDownhit)
+        if (Playerhit)
         {
-            if (Playerhit.distance <= MinDis)
+            if (Vector2.Distance(Playerhit.point, transform.position) <= MinDis)
             {
                 Attacking();
             }
@@ -325,7 +324,6 @@ public class EnemyAIFull : MonoBehaviour
             {
                 EW = EnemyWorks.Detected;
             }
-            
         }
         
         if (back)
@@ -364,5 +362,11 @@ public class EnemyAIFull : MonoBehaviour
                 collision.gameObject.GetComponent<Stamina_and_Health>().Health -= MyDamage*0.1f;
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(BoxStartPos.position, BoxCastSize);
     }
 }

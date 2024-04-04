@@ -19,6 +19,8 @@ public class Boss_AI : MonoBehaviour
     public LayerMask Playerlayer;
     public int Direction;
 
+    public GameObject Weapon;
+
     bool CanJump = true;
     // Start is called before the first frame update
     void Start()
@@ -64,6 +66,12 @@ public class Boss_AI : MonoBehaviour
         }
 
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, EnemyRange);
+    }
     void Rest()
     {
         if (PlayerCol)
@@ -81,7 +89,6 @@ public class Boss_AI : MonoBehaviour
     }
     void Found()
     {
-
         IsStunned = false;
         if (Vector2.Distance(transform.position,PlayerCol.transform.position) <= 4f)
         {
@@ -103,7 +110,7 @@ public class Boss_AI : MonoBehaviour
     Rigidbody2D rb;
     void Charging()
     {
-        if (Starttime < CD)
+        /*if (Starttime < CD)
         {
             Starttime += Time.deltaTime;
         }
@@ -116,17 +123,21 @@ public class Boss_AI : MonoBehaviour
                 Starttime = 0;
                 StartCoroutine(StnTime());
             }
-        }
+        }*/
+
+        Weapon.GetComponent<HomingMissile>().Speed *= Direction;
     }
     bool IsStunned;
     void Stunned()
     {
         Debug.Log("Vulnerable");
     }
+
     public IEnumerator StnTime()
     {
         BS = BossStates.Stun;
         yield return new WaitForSeconds(2.5f);
+        AttackJumped = false;
         BS = BossStates.Found;
     }
     void Earthquake()
@@ -138,10 +149,12 @@ public class Boss_AI : MonoBehaviour
     {
 
     }
+    bool AttackJumped = false;
     void Jump()
     {
         rb.velocity = transform.up * 10f;
         CanJump = false;
+        AttackJumped = true;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -154,12 +167,12 @@ public class Boss_AI : MonoBehaviour
             IsStunned = true;
             CanJump = true;
             ShakeManager.Instance.Shake(3,1.5f);
-            if(PlayerCol.GetComponent<BasicScript>().IsTouchingGround == true)
+            if(PlayerCol.GetComponent<BasicScript>().IsTouchingGround == true && AttackJumped)
             {
                 PlayerCol.GetComponent<Stamina_and_Health>().Health -= 50;
-                StartCoroutine(StnTime());
                 //PlayerCol.GetComponent<Stamina_and_Health>().HealthSlider.value = PlayerCol.GetComponent<Stamina_and_Health>().Health;
             }
+                StartCoroutine(StnTime());
         }
     }
 }
